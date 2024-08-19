@@ -9,6 +9,7 @@ using static SDL2.SDL;
 using Ludo;
 using System.Text;
 using System.Drawing;
+using ConsoleRenderer._02_Chess;
 
 /*
  * Petite librairie chill développée par James Tizanou à partir du 04/06/2024 (04 juin 2024)
@@ -370,6 +371,16 @@ namespace Main
                 grille[indx[i]].color = coul;
             }
         }
+
+        public int GetRangee(int nb)
+        {
+            return nb / squaresPerColumn;
+        }
+
+        public int GetColonne(int nb)
+        {
+            return nb % squaresPerColumn;
+        }
     }
     #endregion
 
@@ -623,9 +634,34 @@ namespace Main
                 src.h = 100;  
                 SDL_QueryTexture(textTexture, out f, out g, out src.w, out src.h);
                 SDL_QueryTexture(textTexture, out f, out g, out dest.w, out dest.h);
-                SDL_RenderCopy(Program.renderer, textTexture, ref src, ref dest);
+                SDL_RenderCopy(renderer, textTexture, ref src, ref dest);
                 SDL_DestroyTexture(textTexture);
             
+        }
+
+        public static void DrawImage(string path, Vector2D<int> pos, Vector2D<int> size)
+        {
+             /*SDL_Surface*/
+            //IntPtr image = SDL_image.IMG_Load(path);//SDL_LoadBMP(path);
+            /*SDL_Surface**/
+            //IntPtr texture = SDL_CreateTextureFromSurface(renderer, image);*/
+
+            IntPtr texture = SDL_image.IMG_LoadTexture(renderer, path);
+
+            SDL_Rect dest = new SDL_Rect();
+            dest.x = pos.x;
+            dest.y = pos.y;
+            dest.w = size.x;
+            dest.h = size.y;
+            SDL_Rect src = new SDL_Rect();
+            src.x = pos.x;
+            src.y = pos.y;
+            src.w = size.x;
+            src.h = size.y;
+            /*SDL_QueryTexture(texture, out f, out g, out src.w, out src.h);
+            SDL_QueryTexture(texture, out f, out g, out dest.w, out dest.h);*/
+            SDL_RenderCopy(renderer, texture,ref src,ref dest);
+            SDL_DestroyTexture(texture);
         }
 
         #endregion
@@ -710,7 +746,10 @@ namespace Main
             // update the key state at every frame a la fin
             UpdateKeyInfo();
 
-            Ludo_.Ludo();
+            //DrawImage("pawn.png", new(100,100), new(100,100));
+
+            //Ludo_.Ludo();
+            Chess_.Chess();
 
             // Switches out the currently presented render surface with the one we just did work on.
             SDL_RenderPresent(renderer);
@@ -741,6 +780,9 @@ namespace Main
 
             SDL_mixer.Mix_AllocateChannels(8);
             SDL_mixer.Mix_Volume(1, SDL_mixer.MIX_MAX_VOLUME / 2);
+
+            SDL_image.IMG_Init(SDL_image.IMG_InitFlags.IMG_INIT_PNG);
+            SDL_image.IMG_Init(SDL_image.IMG_InitFlags.IMG_INIT_JPG);
 
             // Create a new window given a title, size, and passes it a flag indicating it should be shown.
             window = SDL_CreateWindow(

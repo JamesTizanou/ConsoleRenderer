@@ -120,7 +120,7 @@ namespace Ludo
             {
                 return token4;
             }
-            throw new Exception($"Aucun pion trouvé pour {Actual().name}"); // il cherche le pion du muvais joueur, donc il tombe sur une erreur
+            throw new Exception($"Aucun pion trouvé pour {Actual().name}"); // il cherche le pion du mauvais joueur, donc il tombe sur une erreur - cette erreur arrive uniquement quand 2 pions sont superposés.
         }
 
         public static Player rouge = new Player(Colors.Red, "rouge", new int[] { 16, 19, 61, 64 }, 91);
