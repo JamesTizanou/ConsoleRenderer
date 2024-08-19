@@ -64,25 +64,26 @@ namespace Ludo
         }
 
         // si le joueur a 3 pions en maison, cette fonction retourne le pion qui est sorti
-        public Pion pion_sorti()
+        public int PionsSortis()
         {
+            int nb = 0;
             if (token1.outOfHome)
             {
-                return token1;
+                nb++;
             }
             if (token2.outOfHome)
             {
-                return token2; 
+                nb++;
             }
             if (token3.outOfHome)
             {
-                return token3; 
+                nb++;
             }
             if (token4.outOfHome)
             {
-                return token4; 
+                nb++; 
             }
-            throw new Exception("Pion introuvale");
+            return nb;
         }
 
         public Pion PionClique(Vector2D<int> pos)
@@ -93,7 +94,7 @@ namespace Ludo
             }
             else if (pos == Ludo_.board.grille[token2.caseActuelle].pos)
             {
-                return token2; 
+                return token2;
             }
             else if (pos == Ludo_.board.grille[token3.caseActuelle].pos)
             {
@@ -101,25 +102,25 @@ namespace Ludo
             }
             else if (pos == Ludo_.board.grille[token4.caseActuelle].pos)
             {
-                return token4; 
+                return token4;
             }
-            if (token1.caseActuelle == 0)
+            else if (/*token1.outOfHome &&*/ token1.caseActuelle < 52 && pos == Ludo_.board.grille[chemin_p[token1.caseActuelle]].pos)
             {
                 return token1;
             }
-            if (token2.caseActuelle == 0)
+            else if (/*token2.outOfHome &&*/ token2.caseActuelle < 52 && pos == Ludo_.board.grille[chemin_p[token2.caseActuelle]].pos)
             {
                 return token2;
             }
-            if (token3.caseActuelle == 0)
+            else if (/*token3.outOfHome &&*/ token3.caseActuelle < 52 && pos == Ludo_.board.grille[chemin_p[token3.caseActuelle]].pos)
             {
                 return token3;
             }
-            if (token4.caseActuelle == 0)
+            else if (/*token4.outOfHome &&*/ token4.caseActuelle < 52 && pos == Ludo_.board.grille[chemin_p[token4.caseActuelle]].pos)
             {
                 return token4;
             }
-            throw new Exception("Aucun pion trouvé");
+            throw new Exception($"Aucun pion trouvé pour {Actual().name}"); // il cherche le pion du muvais joueur, donc il tombe sur une erreur
         }
 
         public static Player rouge = new Player(Colors.Red, "rouge", new int[] { 16, 19, 61, 64 }, 91);

@@ -72,7 +72,7 @@ namespace Ludo
             if (outOfHome)
             {
                 caseActuelle += De.val;
-                pos = Ludo_.board.grille[joueur->chemin_p[caseActuelle]].pos;
+                //pos = Ludo_.board.grille[joueur->chemin_p[caseActuelle]].pos;
             }
         }
     }

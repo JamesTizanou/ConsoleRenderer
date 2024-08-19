@@ -12,7 +12,7 @@ namespace Ludo
 {
     abstract class De
     {
-        public static int val = Random.Shared.Next(0, 7);
+        public static int val = Random.Shared.Next(1, 7);
         public static bool obtenu = false;
         public static void Renew()
         {
@@ -38,27 +38,27 @@ namespace Ludo
                 FirstExec = false;
             }
             DisplayBoard();
-            DisplayTokens();
             ObtenirDe();
             JouerSonTour();
+            DisplayTokens();
             Console.WriteLine(De.val);
         }
 
         static void ObtenirDe()
         {
             string txt;
-            if (De.val == 6)
-            {
+            /*if (De.val == 6)
+            {*/
                 txt = "Valeur du cube : " + Player.Actual().name + " : " + De.val.ToString();
-            }
+            /*}
             else
             {
                 txt = "Valeur du cube : " + Player.Previous().name + " : " + De.val.ToString();
-            }
+            }*/
+            Color.Pencil(Colors.Orange);
+            Program.DrawText(txt, new Vector2D<int>(200, 15), 20);
             if (!De.obtenu)
             {
-                Color.Pencil(Colors.Orange);
-                Program.DrawText(txt, new Vector2D<int>(200, 15),20);
                 Color.Pencil(Player.Actual().couleur);
                 Rect rect = new Rect(new Vector2D<int>(500, 5), new Vector2D<int>(30, 30));
                 Program.DrawFullRect(rect);
@@ -133,7 +133,7 @@ namespace Ludo
             Program.DrawLine(bottomleft, topright);
         }
 
-        static unsafe void SwitchTurns()
+        static void SwitchTurns()
         {
             Player.Actual().pionJoue = false;
             De.obtenu = false;
@@ -173,7 +173,6 @@ namespace Ludo
                 {
                     Pion pi = Player.Actual().PionClique(zone.pos);
                     Player.Actual().pionsEnMaison--;
-                    //Player.Actual().pionJoue = true;
                     De.obtenu = false;
                     pi.outOfHome = true;
                     pi.caseActuelle = 0;
@@ -182,11 +181,11 @@ namespace Ludo
             }
         }
 
-        static unsafe void SortirDeMaison()
+        static void SortirDeMaison()
         {
             Tile token1 = board.grille[Player.Actual().token1.caseActuelle];
             Tile token2 = board.grille[Player.Actual().token2.caseActuelle];
-            Tile token3 = board.grille[Player.Actual().token2.caseActuelle];
+            Tile token3 = board.grille[Player.Actual().token3.caseActuelle];
             Tile token4 = board.grille[Player.Actual().token4.caseActuelle];
 
             ClickSurCase(token1);
@@ -195,7 +194,7 @@ namespace Ludo
             ClickSurCase(token4);
         }
 
-        static unsafe void BougerUnPion()
+        static void BougerUnPion()
         {
             Vector2D<int>[] p = { Player.Actual().token1.pos, Player.Actual().token2.pos, Player.Actual().token3.pos, Player.Actual().token4.pos };
             for (int i = 0; i < p.Length; i++)
@@ -222,7 +221,7 @@ namespace Ludo
             }
         }
 
-        static unsafe void JouerSonTour()
+        static void JouerSonTour()
         {
             if (De.obtenu && !Player.Actual().pionJoue)
             {
@@ -230,14 +229,11 @@ namespace Ludo
                 {
                     BougerUnPion();
                 }
-                if (De.val == 6)
+                if (De.val == 6 && Player.Actual().pionsEnMaison > 0)
                 {
-                    if (Player.Actual().pionsEnMaison > 0)
-                    {
-                        SortirDeMaison();
-                    }
+                    SortirDeMaison();
                 }
-                else if (Player.Actual().pionsEnMaison == 4 && De.val != 6)
+                if (Player.Actual().pionsEnMaison == 4 && De.val != 6)
                 {
                     SwitchTurns();
                 }

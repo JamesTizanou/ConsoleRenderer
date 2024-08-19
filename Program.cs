@@ -397,6 +397,7 @@ namespace Main
         public static IntPtr renderer;
         public static bool running = true;
         static byte[] old_key_state;
+        static uint old_m_state = SDL_GetMouseState(out int x, out int y);
 
         static void Main()
         {
@@ -663,16 +664,28 @@ namespace Main
             return false;
         }
 
-        public static bool MouseLeftPressed()
+        public static bool MouseLeftHeld()
         {
             var state = SDL_GetMouseState(out int x, out int y);
             return (state & SDL_BUTTON_LMASK) != 0;
         }
 
-        public static bool MouseRightPressed()
+        public static bool MouseRightHeld()
         {
             var state = SDL_GetMouseState(out int x, out int y);
             return (state & SDL_BUTTON_RMASK) != 0;
+        }
+
+        public static bool MouseLeftPressed()
+        {
+            var state = SDL_GetMouseState(out int x, out int y);
+            return (state & SDL_BUTTON_LMASK) != 0 /*&& state != old_m_state*/;
+        }
+
+        public static bool MouseRightPressed()
+        {
+            var state = SDL_GetMouseState(out int x, out int y);
+            return (state & SDL_BUTTON_RMASK) != 0 /*&& state != old_m_state*/;
         }
 
         #endregion
@@ -707,6 +720,7 @@ namespace Main
             IntPtr keyboardState = SDL_GetKeyboardState(out int numkeys);
             old_key_state = new byte[numkeys];
             Marshal.Copy(keyboardState, old_key_state, 0, numkeys); //ca ca copie le tableau qui se trouve au pointer keyboardState dans un vrai tableau byte[]
+            old_m_state = SDL_GetMouseState(out int i, out int j);
         }
         static void Setup()
         {
