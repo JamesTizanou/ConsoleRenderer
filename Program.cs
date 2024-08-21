@@ -1,15 +1,7 @@
-﻿using SDL2;
-using System;
-using System.Numerics;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
+﻿using Chess;
+using SDL2;
 using System.Runtime.InteropServices;
-using System.Windows.Input;
 using static SDL2.SDL;
-using Ludo;
-using System.Text;
-using System.Drawing;
-using ConsoleRenderer._02_Chess;
 
 /*
  * Petite librairie chill développée par James Tizanou à partir du 04/06/2024 (04 juin 2024)
@@ -23,7 +15,7 @@ using ConsoleRenderer._02_Chess;
 
 namespace Main
 {
-#region classes
+    #region classes
     class Vector2D<Numeric>
     {
         public Numeric? x;
@@ -32,7 +24,7 @@ namespace Main
         /*public static Vector2D<Numeric> operator +(Vector2D<Numeric> a, Vector2D<Numeric> b) 
             => new Vector2D<Numeric>(a.x + b.x, a.y + b.y);*/
 
-        
+
         public Vector2D(Numeric? x, Numeric? y)
         {
             this.x = x;
@@ -42,7 +34,7 @@ namespace Main
 
     class Rect
     {
-        public Vector2D<int>? pos = new Vector2D<int>(0,0);
+        public Vector2D<int>? pos = new Vector2D<int>(0, 0);
         public Vector2D<int>? size = new Vector2D<int>(0, 0);
 
         public static explicit operator Rect(SDL_Rect rect)
@@ -56,10 +48,10 @@ namespace Main
             size = _size;
         }
 
-        public Rect(int x, int y,  int w, int h)
+        public Rect(int x, int y, int w, int h)
         {
             pos = new Vector2D<int>(x, y);
-            size = new Vector2D<int>(w,h);
+            size = new Vector2D<int>(w, h);
         }
     }
 
@@ -89,47 +81,47 @@ namespace Main
         {
             if (Colors.Red == coul)
             {
-                return new Color( 255, 0, 0, 255);
+                return new Color(255, 0, 0, 255);
             }
             else if (Colors.Blue == coul)
             {
-                return new Color( 0, 0, 255, 255);
+                return new Color(0, 0, 255, 255);
             }
             else if (Colors.Green == coul)
             {
-                return new Color( 0, 255, 0, 255);
+                return new Color(0, 255, 0, 255);
             }
             else if (Colors.Yellow == coul)
             {
-                return new Color( 255, 255, 0, 255);
+                return new Color(255, 255, 0, 255);
             }
             else if (Colors.White == coul)
             {
-                return new Color( 255, 255, 255, 255);
+                return new Color(255, 255, 255, 255);
             }
             else if (Colors.Black == coul)
             {
-                return new Color( 0, 0, 0, 255);
+                return new Color(0, 0, 0, 255);
             }
             else if (Colors.Orange == coul)
             {
-                return new Color( 255, 165, 0, 255);
+                return new Color(255, 165, 0, 255);
             }
             else if (Colors.Pink == coul)
             {
-                return new Color( 255, 192, 203, 255);
+                return new Color(255, 192, 203, 255);
             }
             else if (Colors.Purple == coul)
             {
-                return new Color( 160, 32, 240, 255);
+                return new Color(160, 32, 240, 255);
             }
             else if (Colors.Cyan == coul)
             {
-                return new Color( 0, 255, 255, 255);
+                return new Color(0, 255, 255, 255);
             }
             else if (Colors.SkyBlue == coul)
             {
-                return new Color( 135, 206, 235, 255);
+                return new Color(135, 206, 235, 255);
             }
             throw new Exception("Couleur introuvale");
         }
@@ -140,8 +132,8 @@ namespace Main
             byte g;
             byte b;
             byte a;
-            SDL_GetRenderDrawColor(Program.renderer,out r, out g, out b, out a);
-            return new Color(r,g,b,a);
+            SDL_GetRenderDrawColor(Program.renderer, out r, out g, out b, out a);
+            return new Color(r, g, b, a);
         }
 
         public static void Pencil(Color coul)
@@ -149,9 +141,9 @@ namespace Main
             SDL_SetRenderDrawColor(Program.renderer, coul.r, coul.g, coul.b, coul.a);
         }
 
-        public static void Pencil(byte r,byte g,byte b,byte a = 255)
+        public static void Pencil(byte r, byte g, byte b, byte a = 255)
         {
-            SDL_SetRenderDrawColor(Program.renderer, r, g,b,a);
+            SDL_SetRenderDrawColor(Program.renderer, r, g, b, a);
         }
 
         public static void Pencil(Colors coul)
@@ -205,9 +197,9 @@ namespace Main
 
         public Color(byte _r, byte _g, byte _b, byte _a = 255)
         {
-            r = _r; 
-            g = _g; 
-            b = _b; 
+            r = _r;
+            g = _g;
+            b = _b;
             a = _a;
         }
     }
@@ -242,12 +234,12 @@ namespace Main
         int size;
         SDL_Color col;
 
-        public Text(string text , Vector2D<int> pos, int size = 30, string fontPath = "Fonts/Minecraft.ttf")
+        public Text(string text, Vector2D<int> pos, int size = 30, string fontPath = "Fonts/Minecraft.ttf")
         {
             Color coul = Color.GetPencil();
             SDL_Color c = new SDL_Color();
             c.r = coul.r;
-            c.g = coul.g; 
+            c.g = coul.g;
             c.b = coul.b;
             c.a = coul.a;
             col = c;
@@ -397,12 +389,12 @@ namespace Main
     }
     #endregion
 
-#region couleurs
+    #region couleurs
     public enum Colors
     {
         White,
         Red,
-        Green, 
+        Green,
         Blue,
         Black,
         Yellow,
@@ -439,12 +431,12 @@ namespace Main
 
         public static Vector2D<int> MousePosition()
         {
-            Vector2D<int> mpos = new Vector2D<int>(0,0);
+            Vector2D<int> mpos = new Vector2D<int>(0, 0);
             int x;
             int y;
             SDL_GetMouseState(out x, out y);
             mpos.x = x;
-            mpos.y = y;  
+            mpos.y = y;
             Console.WriteLine("Cordonnées: " + mpos.x + "," + mpos.y);
             return mpos;
         }
@@ -507,7 +499,7 @@ namespace Main
             Rect delim = new Rect(new Vector2D<int>(cercle.pos.x - cercle.rayon, cercle.pos.y - cercle.rayon),
                                   new Vector2D<int>(cercle.rayon * 2, cercle.rayon * 2));
 
-            for (int n = delim.pos.y; n <= delim.pos.y + delim.size.y;n++)
+            for (int n = delim.pos.y; n <= delim.pos.y + delim.size.y; n++)
             {
                 for (int i = delim.pos.x; i <= delim.pos.x + delim.size.x; i++)
                 {
@@ -522,134 +514,134 @@ namespace Main
 
         static double Rise(Vector2D<int> p1, Vector2D<int> p2)
         {
-	        return ((double) p1.y - p2.y) / ((double) p1.x - p2.x);
+            return ((double)p1.y - p2.y) / ((double)p1.x - p2.x);
         }
 
-    static void DrawFlatTriangle(Vector2D<int> p1, int flat_y, int x1, int x2)
+        static void DrawFlatTriangle(Vector2D<int> p1, int flat_y, int x1, int x2)
         {
-	        int miny = Math.Min(p1.y, flat_y);
-	        int maxy = Math.Max(p1.y, flat_y);
+            int miny = Math.Min(p1.y, flat_y);
+            int maxy = Math.Max(p1.y, flat_y);
 
-	        for (int y = miny; y < maxy; y++)
-	        {
-		        double xx1 = 0;
-		        double xx2 = 0;
+            for (int y = miny; y < maxy; y++)
+            {
+                double xx1 = 0;
+                double xx2 = 0;
 
-		        if (p1.x == x1)
-		        {
-			        xx1 = x1;
+                if (p1.x == x1)
+                {
+                    xx1 = x1;
 
-			        double a2 = Rise(p1, new Vector2D<int>( x2, flat_y ));
-			        double b2 = p1.y - a2 * p1.x;
-			        xx2 = (y - b2) / a2;
+                    double a2 = Rise(p1, new Vector2D<int>(x2, flat_y));
+                    double b2 = p1.y - a2 * p1.x;
+                    xx2 = (y - b2) / a2;
 
-		        }
-		        else if (p1.x == x2)
-		        {
-			        double a1 = Rise(p1, new Vector2D<int>(x1, flat_y));
-			        double b1 = p1.y - a1 * p1.x;
+                }
+                else if (p1.x == x2)
+                {
+                    double a1 = Rise(p1, new Vector2D<int>(x1, flat_y));
+                    double b1 = p1.y - a1 * p1.x;
 
-			        xx1 = (y - b1) / a1;
+                    xx1 = (y - b1) / a1;
 
-			        xx2 = x2;
-		        }
-		        else
-		        {
-			        double a1 = Rise(p1, new Vector2D<int>(x1, flat_y ));
-			        double a2 = Rise(p1, new Vector2D<int>(x2, flat_y ));
+                    xx2 = x2;
+                }
+                else
+                {
+                    double a1 = Rise(p1, new Vector2D<int>(x1, flat_y));
+                    double a2 = Rise(p1, new Vector2D<int>(x2, flat_y));
 
-			        double b1 = p1.y - a1 * p1.x;
-			        double b2 = p1.y - a2 * p1.x;
+                    double b1 = p1.y - a1 * p1.x;
+                    double b2 = p1.y - a2 * p1.x;
 
-			        xx1 = (y - b1) / a1;
-			        xx2 = (y - b2) / a2;
-		        }
+                    xx1 = (y - b1) / a1;
+                    xx2 = (y - b2) / a2;
+                }
 
-		        double minx = Math.Min(xx1, xx2);
-		        double maxx = Math.Max(xx1, xx2);
+                double minx = Math.Min(xx1, xx2);
+                double maxx = Math.Max(xx1, xx2);
 
-		        for (double x = minx; x < maxx; x++)
-		        {
-			        DrawPix(new Vector2D<int>((int)x, y));
-		        }
-	        }
+                for (double x = minx; x < maxx; x++)
+                {
+                    DrawPix(new Vector2D<int>((int)x, y));
+                }
+            }
         }
 
         public static void DrawTriangle(Vector2D<int> p1, Vector2D<int> p2, Vector2D<int> p3)
         {
-	        DrawLine(p1, p2);
-	        DrawLine(p1, p3);
-	        DrawLine(p2, p3);
+            DrawLine(p1, p2);
+            DrawLine(p1, p3);
+            DrawLine(p2, p3);
         }
 
         public static void DrawFullTriangle(Vector2D<int> p1, Vector2D<int> p2, Vector2D<int> p3)
         {
-	        Vector2D<int> top;
-            Vector2D<int> mid = new Vector2D<int>(0,0);
+            Vector2D<int> top;
+            Vector2D<int> mid = new Vector2D<int>(0, 0);
             Vector2D<int> bot;
 
-	        if (p1.y > p2.y) top = p1;
-	        else top = p2;
-	        if (p3.y > top.y) top = p3;
+            if (p1.y > p2.y) top = p1;
+            else top = p2;
+            if (p3.y > top.y) top = p3;
 
-	        if (p1.y < p2.y) bot = p1;
-	        else bot = p2;
-	        if (p3.y < bot.y) bot = p3;
+            if (p1.y < p2.y) bot = p1;
+            else bot = p2;
+            if (p3.y < bot.y) bot = p3;
 
-	        if (top == p1 && bot == p2) mid = p3;
-	        if (top == p3 && bot == p2) mid = p1;
-	        if (top == p1 && bot == p3) mid = p2;
+            if (top == p1 && bot == p2) mid = p3;
+            if (top == p3 && bot == p2) mid = p1;
+            if (top == p1 && bot == p3) mid = p2;
 
-	        double flat_x = 0;
+            double flat_x = 0;
 
-	        if(top.x == bot.x)
-	        {	
-		        flat_x = top.x;
-	        }
-	        else
-	        {
+            if (top.x == bot.x)
+            {
+                flat_x = top.x;
+            }
+            else
+            {
 
-		        double a = Rise(top, bot);
-		        double b = top.y - top.x * a;
-		        flat_x = (mid.y - b) / a;
-	        }
+                double a = Rise(top, bot);
+                double b = top.y - top.x * a;
+                flat_x = (mid.y - b) / a;
+            }
 
-	        DrawFlatTriangle(top, mid.y, mid.x, (int)flat_x);
-	        DrawFlatTriangle(bot, mid.y, mid.x, (int)flat_x);
+            DrawFlatTriangle(top, mid.y, mid.x, (int)flat_x);
+            DrawFlatTriangle(bot, mid.y, mid.x, (int)flat_x);
         }
 
         public static void DrawText(string text, Vector2D<int> pos, int size = 30, string fontPath = "Fonts/Minecraft.ttf")
         {
-                Color coul = Color.GetPencil();
-                SDL_Color c = new SDL_Color();
-                c.r = coul.r;
-                c.g = coul.g;
-                c.b = coul.b;
-                c.a = coul.a;
-                IntPtr font = SDL_ttf.TTF_OpenFont(fontPath, size);
-                if (font == IntPtr.Zero)
-                {
-                    Console.WriteLine(SDL_GetError());
-                }
-                IntPtr textSurface = SDL_ttf.TTF_RenderText_Solid(font, text, c);
-                IntPtr textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-                SDL_Rect dest = new SDL_Rect();
-                dest.x = pos.x;
-                dest.y = pos.y;
-                dest.w = 100;
-                dest.h = 100;
-                uint f = 0;
-                int g = 0;
-                SDL_Rect src = new SDL_Rect();
-                src.x = 0;
-                src.y = 0;
-                src.w = 100;
-                src.h = 100;  
-                SDL_QueryTexture(textTexture, out f, out g, out src.w, out src.h);
-                SDL_QueryTexture(textTexture, out f, out g, out dest.w, out dest.h);
-                SDL_RenderCopy(renderer, textTexture, ref src, ref dest);
-                SDL_DestroyTexture(textTexture);
-            
+            Color coul = Color.GetPencil();
+            SDL_Color c = new SDL_Color();
+            c.r = coul.r;
+            c.g = coul.g;
+            c.b = coul.b;
+            c.a = coul.a;
+            IntPtr font = SDL_ttf.TTF_OpenFont(fontPath, size);
+            if (font == IntPtr.Zero)
+            {
+                Console.WriteLine(SDL_GetError());
+            }
+            IntPtr textSurface = SDL_ttf.TTF_RenderText_Solid(font, text, c);
+            IntPtr textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+            SDL_Rect dest = new SDL_Rect();
+            dest.x = pos.x;
+            dest.y = pos.y;
+            dest.w = 100;
+            dest.h = 100;
+            uint f = 0;
+            int g = 0;
+            SDL_Rect src = new SDL_Rect();
+            src.x = 0;
+            src.y = 0;
+            src.w = 100;
+            src.h = 100;
+            SDL_QueryTexture(textTexture, out f, out g, out src.w, out src.h);
+            SDL_QueryTexture(textTexture, out f, out g, out dest.w, out dest.h);
+            SDL_RenderCopy(renderer, textTexture, ref src, ref dest);
+            SDL_DestroyTexture(textTexture);
+
         }
 
         public static void DrawImage(string path, Vector2D<int> pos, Vector2D<int> size)
@@ -661,7 +653,7 @@ namespace Main
             dest.y = pos.y;
             dest.w = size.x;
             dest.h = size.y;
-            SDL_RenderCopy(renderer, texture,/*ref src*/ IntPtr.Zero,ref dest);
+            SDL_RenderCopy(renderer, texture,/*ref src*/ IntPtr.Zero, ref dest);
             SDL_DestroyTexture(texture);
         }
 
@@ -747,7 +739,7 @@ namespace Main
             // update the key state at every frame a la fin
             UpdateKeyInfo();
 
-            //DrawImage("pawn.png", new(500,500), new(300,300));
+            DrawImage("pawn.jpg", new(500, 500), new(300, 300));
 
             //Ludo_.Ludo();
             Chess_.Chess();
@@ -774,7 +766,7 @@ namespace Main
 
             SDL_ttf.TTF_Init();
             SDL_mixer.Mix_Init(SDL_mixer.MIX_InitFlags.MIX_INIT_MP3);
-            SDL_mixer.Mix_Init(SDL_mixer.MIX_InitFlags.MIX_INIT_MP3 );
+            SDL_mixer.Mix_Init(SDL_mixer.MIX_InitFlags.MIX_INIT_MP3);
 
             if (SDL_mixer.Mix_OpenAudio(44100, SDL_mixer.MIX_DEFAULT_FORMAT, SDL_mixer.MIX_DEFAULT_CHANNELS, 1024) == -1) //Initialisation de l'API Mixer
                 Console.WriteLine("%s", SDL_mixer.Mix_GetError());

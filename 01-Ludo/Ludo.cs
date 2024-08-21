@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.Intrinsics;
-using System.Text;
-using System.Threading.Tasks;
-using Main;
+﻿using Main;
 
 namespace Ludo
 {
@@ -29,7 +21,7 @@ namespace Ludo
                                                 171,156,141,125,124,123,122,121,120,105,90,91,92,93,94,95,81,66,51,36,21 };
         static bool FirstExec = true;
 
-        
+
         public static void Ludo()
         {
             if (FirstExec)
@@ -49,7 +41,7 @@ namespace Ludo
             string txt;
             /*if (De.val == 6)
             {*/
-                txt = "Valeur du cube : " + Player.Actual().name + " : " + De.val.ToString();
+            txt = "Valeur du cube : " + Player.Actual().name + " : " + De.val.ToString();
             /*}
             else
             {
@@ -112,11 +104,11 @@ namespace Ludo
 
         static void DrawBoardCenter()
         {
-            Vector2D<int> centre = new(board.grille[112].pos.x + board.tileSize.x / 2, board.grille[112].pos.y + board.tileSize.y / 2 );
-            Vector2D<int> topleft = new( board.grille[96].pos.x, board.grille[96].pos.y );
-            Vector2D<int> bottomleft = new( board.grille[141].pos.x, board.grille[141].pos.y );
-            Vector2D<int> topright = new( board.grille[99].pos.x, board.grille[99].pos.y );
-            Vector2D<int> bottomright = new( board.grille[144].pos.x, board.grille[144].pos.y );
+            Vector2D<int> centre = new(board.grille[112].pos.x + board.tileSize.x / 2, board.grille[112].pos.y + board.tileSize.y / 2);
+            Vector2D<int> topleft = new(board.grille[96].pos.x, board.grille[96].pos.y);
+            Vector2D<int> bottomleft = new(board.grille[141].pos.x, board.grille[141].pos.y);
+            Vector2D<int> topright = new(board.grille[99].pos.x, board.grille[99].pos.y);
+            Vector2D<int> bottomright = new(board.grille[144].pos.x, board.grille[144].pos.y);
             Color.Pencil(Player.rouge.couleur);
             Program.DrawFullTriangle(bottomleft, topleft, centre);
             Color.Pencil(Player.jaune.couleur);
@@ -126,7 +118,7 @@ namespace Ludo
             Color.Pencil(Player.bleu.couleur);
             Program.DrawFullTriangle(bottomright, centre, bottomleft);
             Color.Pencil(Colors.Black);
-            Program.DrawRect(new Rect( topleft, new Vector2D<int>(bottomright.x - topleft.x, bottomright.y - topleft.y) ));
+            Program.DrawRect(new Rect(topleft, new Vector2D<int>(bottomright.x - topleft.x, bottomright.y - topleft.y)));
             Program.DrawLine(topleft, bottomright);
             Program.DrawLine(bottomleft, topright);
             Program.DrawLine(topleft, bottomright);
