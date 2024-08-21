@@ -356,17 +356,30 @@ namespace Main
             }
         }
 
-        public void Display()
+        public void Display(bool drawContour = false)
         {
             for (int i = 0; i < grille.Count; i++)
             {
                 grille[i].Light();
+            }
+            if (drawContour)
+            {
+                Color.Pencil(Colors.White);
+                Program.DrawRect(new(pos, new(tileSize.x * squaresPerColumn, tileSize.y * squaresPerRow)));
             }
         }
 
         public void Personalize(int[] indx, Colors coul)
         {
             for (int i = 0; i < indx.Length; i++)
+            {
+                grille[indx[i]].color = coul;
+            }
+        }
+
+        public void Personalize(List<int> indx, Colors coul)
+        {
+            for (int i = 0; i < indx.Count; i++)
             {
                 grille[indx[i]].color = coul;
             }
@@ -641,11 +654,6 @@ namespace Main
 
         public static void DrawImage(string path, Vector2D<int> pos, Vector2D<int> size)
         {
-             /*SDL_Surface*/
-            //IntPtr image = SDL_image.IMG_Load(path);//SDL_LoadBMP(path);
-            /*SDL_Surface**/
-            //IntPtr texture = SDL_CreateTextureFromSurface(renderer, image);*/
-
             IntPtr texture = SDL_image.IMG_LoadTexture(renderer, path);
 
             SDL_Rect dest = new SDL_Rect();
@@ -653,14 +661,7 @@ namespace Main
             dest.y = pos.y;
             dest.w = size.x;
             dest.h = size.y;
-            SDL_Rect src = new SDL_Rect();
-            src.x = pos.x;
-            src.y = pos.y;
-            src.w = size.x;
-            src.h = size.y;
-            /*SDL_QueryTexture(texture, out f, out g, out src.w, out src.h);
-            SDL_QueryTexture(texture, out f, out g, out dest.w, out dest.h);*/
-            SDL_RenderCopy(renderer, texture,ref src,ref dest);
+            SDL_RenderCopy(renderer, texture,/*ref src*/ IntPtr.Zero,ref dest);
             SDL_DestroyTexture(texture);
         }
 
@@ -746,7 +747,7 @@ namespace Main
             // update the key state at every frame a la fin
             UpdateKeyInfo();
 
-            //DrawImage("pawn.png", new(100,100), new(100,100));
+            //DrawImage("pawn.png", new(500,500), new(300,300));
 
             //Ludo_.Ludo();
             Chess_.Chess();

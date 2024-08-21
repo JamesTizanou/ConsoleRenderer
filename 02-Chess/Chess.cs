@@ -17,23 +17,21 @@ namespace ConsoleRenderer._02_Chess
             List<int> cn = new();
             for(int i = 0; i < board.grille.Count; i += board.squaresPerColumn)
             {
-                if (board.GetRangee(i) % 2 == 0)
+                int n = i;
+                if (board.GetRangee(i) % 2 != 0)
                 {
-                    cn.Add(i);
-                    cn.Add(i + 2);
-                    cn.Add(i + 4);
-                    cn.Add(i + 6);
+                    n++;
                 }
-                else
-                {
-
-                }
+                cn.Add(n);
+                cn.Add(n + 2);
+                cn.Add(n + 4);
+                cn.Add(n + 6);
             }
             return cn;
         }
         public static void Chess()
         {
-            board.Display();
+            board.Display(true);
             board.Personalize(casesNoires(), Colors.Black);
         }
     }
