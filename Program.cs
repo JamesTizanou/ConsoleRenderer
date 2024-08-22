@@ -21,8 +21,37 @@ namespace Main
         public Numeric? x;
         public Numeric? y;
 
-        /*public static Vector2D<Numeric> operator +(Vector2D<Numeric> a, Vector2D<Numeric> b) 
-            => new Vector2D<Numeric>(a.x + b.x, a.y + b.y);*/
+        public static Vector2D<Numeric> operator +(Vector2D<Numeric> a, Vector2D<Numeric> b)
+        {
+            dynamic ax = a.x;
+            dynamic bx = b.x;
+            dynamic ay = a.y;
+            dynamic by = b.y;
+            return new Vector2D<Numeric>(ax + bx, ay + by);
+        }
+
+        public static Vector2D<Numeric> operator -(Vector2D<Numeric> a, Vector2D<Numeric> b)
+        {
+            dynamic ax = a.x;
+            dynamic bx = b.x;
+            dynamic ay = a.y;
+            dynamic by = b.y;
+            return new Vector2D<Numeric>(ax - bx, ay - by);
+        }
+
+        public static Vector2D<Numeric> operator /(Vector2D<Numeric> a, int n)
+        {
+            dynamic ax = a.x;
+            dynamic ay = a.y;
+            return new Vector2D<Numeric>(ax / n, ay / n);
+        }
+
+        public static Vector2D<Numeric> operator *(Vector2D<Numeric> a, int n)
+        {
+            dynamic ax = a.x;
+            dynamic ay = a.y;
+            return new Vector2D<Numeric>(ax * n, ay * n);
+        }
 
 
         public Vector2D(Numeric? x, Numeric? y)

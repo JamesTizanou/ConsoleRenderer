@@ -8,6 +8,7 @@ namespace Chess
         static Colors couleur1 = Colors.White;
         static Colors couleur2 = Colors.Black;
         public static Grid board = new Grid(new(100, 100), new(t, t), 8, 8, couleur1);
+        public static int tour = 0;
         
 
         static List<int> casesNoires()
