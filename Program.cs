@@ -211,9 +211,10 @@ namespace Main
 
         public Sound(string file)
         {
+            file = "../../../Sounds/" + file;
             //pointeur vers le son loadé (idealement tu le garde dans une liste pour eviter de le loader a chaque frame lol)
             this.file = file;
-            sonData = SDL_mixer.Mix_LoadWAV("Sounds/" + file);
+            sonData = SDL_mixer.Mix_LoadWAV(file);
             Console.WriteLine(SDL_mixer.Mix_GetError());
         }
 
@@ -236,6 +237,7 @@ namespace Main
 
         public Text(string text, Vector2D<int> pos, int size = 30, string fontPath = "Fonts/Minecraft.ttf")
         {
+            fontPath = "../../../" + fontPath;
             Color coul = Color.GetPencil();
             SDL_Color c = new SDL_Color();
             c.r = coul.r;
@@ -646,6 +648,7 @@ namespace Main
 
         public static void DrawImage(string path, Vector2D<int> pos, Vector2D<int> size)
         {
+            path = "../../../" + path;
             IntPtr texture = SDL_image.IMG_LoadTexture(renderer, path);
 
             SDL_Rect dest = new SDL_Rect();

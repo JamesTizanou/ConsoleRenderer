@@ -2,10 +2,10 @@
 
 namespace Chess
 {
-    public class Chess_
+    class Chess_
     {
         static int t = 75;
-        static Grid board = new Grid(new(100, 100), new(t, t), 8, 8, Colors.White);
+        public static Grid board = new Grid(new(100, 100), new(t, t), 8, 8, Colors.White);
 
         static List<int> casesNoires()
         {
