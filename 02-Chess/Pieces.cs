@@ -5,7 +5,7 @@ namespace Chess
 
     class Pieces
     {
-        public Vector2D<int> pos;
+        public int pos;
 
         public string image;
 
@@ -26,7 +26,7 @@ namespace Chess
         }
         public pieces nom { get; set; }
 
-        public Pieces(pieces n, Vector2D<int> p)
+        public Pieces(pieces n, int p)
         {
             nom = n;
             pos = p;
@@ -64,7 +64,27 @@ namespace Chess
 
         public void Draw()
         {
-            Program.DrawImage(image, pos, Chess_.board.tileSize);
+            //Program.DrawImage(image, Chess_.board.grille.[pos], Chess_.board.tileSize); // à refaire
+        }
+
+        public void ShowMoves()
+        {
+
+        }
+
+        public void Move()
+        {
+            switch (nom)
+            {
+                case pieces.PAWN:
+                    PawnMove();
+                    break;
+            }
+        }
+
+        void PawnMove()
+        {
+
         }
     }
 }
