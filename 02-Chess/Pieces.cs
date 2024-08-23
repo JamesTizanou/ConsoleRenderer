@@ -7,7 +7,7 @@ namespace Chess
     {
         public static Dictionary<pieces, Func<Pieces, int[]>> moves;
 
-        static int[] PawnMove( Pieces p)
+        static int[] PawnMove(Pieces p)
         {
             if (Chess_.tour == 0)
             {
@@ -15,7 +15,7 @@ namespace Chess
                 {
                     return new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 };
                 }
-                return new int[] {p.pos - Chess_.board.squaresPerColumn};
+                return new int[] { p.pos - Chess_.board.squaresPerColumn };
             }
             else if (Chess_.tour == 1)
             {
@@ -92,7 +92,6 @@ namespace Chess
                     int[] moves = PiecesManager.moves[nom](this);
                     for (int i = 0; i < moves.Length; i++)
                     {
-
                         Program.DrawFullCircle(new(Chess_.board.grille[i].pos + (Chess_.board.grille[i].pos) / 2, Chess_.board.tileSize.x / 2 - 5));
                     }
                 }
