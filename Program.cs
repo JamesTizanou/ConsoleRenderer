@@ -2,6 +2,7 @@
 using SDL2;
 using System.Runtime.InteropServices;
 using static SDL2.SDL;
+using Ludo;
 
 /*
  * Petite librairie chill développée par James Tizanou à partir du 04/06/2024 (04 juin 2024)
@@ -773,8 +774,8 @@ namespace Main
 
             DrawImage("pawn.jpg", new(500, 500), new(300, 300));
 
-            //Ludo_.Ludo();
-            Chess_.Chess();
+            Ludo_.Ludo();
+            //Chess_.Chess();
 
             // Switches out the currently presented render surface with the one we just did work on.
             SDL_RenderPresent(renderer);
