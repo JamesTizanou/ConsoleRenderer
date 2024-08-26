@@ -642,7 +642,7 @@ namespace Main
             DrawFlatTriangle(bot, mid.y, mid.x, (int)flat_x);
         }
 
-        public static void DrawText(string text, Vector2D<int> pos, int size = 30, string fontPath = "Fonts/Minecraft.ttf")
+        public static void DrawText(string text, Vector2D<int> pos, int size = 3000, string fontPath = "../../../Fonts/Makeup.otf")
         {
             Color coul = Color.GetPencil();
             SDL_Color c = new SDL_Color();
@@ -679,6 +679,12 @@ namespace Main
         public static void DrawImage(string path, Vector2D<int> pos, Vector2D<int> size)
         {
             path = "../../../" + path;
+
+            if (!File.Exists(path))
+            {
+                Console.WriteLine($"Le fichier \"{path}\" n'existe pas");
+            }
+
             IntPtr texture = SDL_image.IMG_LoadTexture(renderer, path);
 
             SDL_Rect dest = new SDL_Rect();
@@ -686,7 +692,7 @@ namespace Main
             dest.y = pos.y;
             dest.w = size.x;
             dest.h = size.y;
-            SDL_RenderCopy(renderer, texture,/*ref src*/ IntPtr.Zero, ref dest);
+            SDL_RenderCopy(renderer, texture, IntPtr.Zero, ref dest);
             SDL_DestroyTexture(texture);
         }
 
@@ -772,10 +778,8 @@ namespace Main
             // update the key state at every frame a la fin
             UpdateKeyInfo();
 
-            DrawImage("pawn.jpg", new(500, 500), new(300, 300));
-
-            Ludo_.Ludo();
-            //Chess_.Chess();
+            //Ludo_.Ludo();
+            Chess_.Chess();
 
             // Switches out the currently presented render surface with the one we just did work on.
             SDL_RenderPresent(renderer);

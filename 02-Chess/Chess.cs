@@ -28,6 +28,8 @@ namespace Chess
             }
             return cn;
         }
+
+        static Vector2D<int> posImage = new(100, 100);
         public static void Chess()
         {
             board.Display(true);
