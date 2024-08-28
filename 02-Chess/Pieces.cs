@@ -27,7 +27,7 @@ namespace Chess
                 {
                     return new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos + (Chess_.board.squaresPerColumn) * 2 };
                 }
-                return new int[] { p.pos - Chess_.board.squaresPerColumn };
+                return new int[] { p.pos + Chess_.board.squaresPerColumn };
             }
             else if (Chess_.tour == 1)
             {
@@ -35,7 +35,7 @@ namespace Chess
                 {
                     return new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 };
                 }
-                return new int[] { p.pos + Chess_.board.squaresPerColumn };
+                return new int[] { p.pos - Chess_.board.squaresPerColumn };
             }
             throw new Exception();
         }
@@ -68,12 +68,10 @@ namespace Chess
 
         public void Draw()
         {
-            ShowMoves();
             Program.DrawImage(image, Chess_.board.grille[pos].pos, Chess_.board.tileSize); // à refaire
-            ShowMoves();
         }
 
-        bool ClickSurPiece()
+        public bool ClickSurPiece()
         {
             if (player == Chess_.tour)
             {
@@ -89,34 +87,36 @@ namespace Chess
         }
 
         public void ShowMoves()
-        {
-            if (ClickSurPiece())
+        {  
+            int[] moves = PiecesManager.moves[nom](this);
+            for (int i = 0; i < moves.Length; i++)
             {
-                isShowingMoves = true;
-            }
-            else if (Program.MouseLeftPressed() && !ClickSurPiece())
-            {
-                isShowingMoves = false;
-            }
-            if (isShowingMoves)
-            {
-                int[] moves = PiecesManager.moves[nom](this); // rendu ici
-                for (int i = 0; i < moves.Length; i++)
-                {
-                    Color.Pencil(Colors.Red);
-                    Program.DrawFullCircle(new(Chess_.board.grille[moves[i]].pos + (Chess_.board.tileSize) / 2, Chess_.board.tileSize.x / 2 - 5));
-                }
+                Color.Pencil(Colors.Red);
+                Program.DrawFullCircle(new(Chess_.board.grille[moves[i]].pos + (Chess_.board.tileSize) / 2, Chess_.board.tileSize.x / 2 - 5));
             }
         }
 
         public void Move()
         {
-            /*switch (nom)
+            int[] moves = PiecesManager.moves[nom](this);
+            for (int i = 0; i < moves.Length; i++)
             {
-                case pieces.PAWN:
-                    PawnMove();
-                    break;
-            }*/
+                if (Program.MouseLeftPressed())
+                {
+                    if (Program.PointInRect(Program.MousePosition(), new(Chess_.board.grille[moves[i]].pos, Chess_.board.tileSize)))
+                    {
+                        pos = moves[i];
+                        firstMove = false;
+                        break;
+                    }
+                }
+            }
         }
+    }
+
+    class Moves
+    {
+        static Pieces? dernierPionClique;
+
     }
 }
