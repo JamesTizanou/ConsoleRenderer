@@ -11,8 +11,8 @@ namespace Chess
         public static int tour = 1;
         static bool FirstExec = true;
 
-        static List<Pieces> _Pieces = new() {new(pieces.PAWN, 50, 1, (Color)Colors.White) };
-        
+        static List<Pieces> _Pieces = new() { new(pieces.PAWN, 50, 1, (Color)Colors.White) };
+
 
         static List<int> casesNoires()
         {
@@ -31,18 +31,32 @@ namespace Chess
             }
             return cn;
         }
-        static Pieces? lastClicked = null;
+        public static Pieces? lastClicked = null;
+        public static Move? lastMoves = null;
         static void ChoixPion()
         {
             if (Program.MouseLeftPressed())
             {
                 bool found = false;
+                if (lastMoves != null)
+                {
+                    int p = lastMoves.isClicked();
+                    if (p >= 0)
+                    {
+                        found = true;
+                        lastMoves.Apply(lastClicked, lastMoves.isClicked());
+                        lastClicked = null;
+                        lastMoves = null;
+                        return;
+                    }
+                }
                 for (int i = 0; i < _Pieces.Count; i++)
                 {
                     if (_Pieces[i].ClickSurPiece())
                     {
-                        lastClicked = _Pieces[i];
                         found = true;
+                        lastClicked = _Pieces[i];
+                        lastMoves = lastClicked.GetMoves();
                     }
                 }
                 if (!found)
@@ -52,8 +66,10 @@ namespace Chess
             }
             if (lastClicked != null)
             {
-                lastClicked.ShowMoves();
+                lastMoves = lastClicked.GetMoves();
+                lastMoves.ShowMoves();
             }
+            return;
         }
 
         static Vector2D<int> posImage = new(100, 100);
@@ -64,9 +80,10 @@ namespace Chess
             board.Display(true);
             board.Personalize(casesNoires(), couleur2);
 
-            for (int i = 0;i < _Pieces.Count;i++)
+            for (int i = 0; i < _Pieces.Count; i++)
             {
                 _Pieces[i].Draw();
+
             }
             ChoixPion();
             if (tour == 0)

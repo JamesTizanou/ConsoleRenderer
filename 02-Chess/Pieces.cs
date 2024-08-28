@@ -1,5 +1,4 @@
 ﻿using Main;
-using static Chess.Pieces;
 
 namespace Chess
 {
@@ -14,28 +13,28 @@ namespace Chess
     }
     class PiecesManager
     {
-        public static Dictionary<pieces, Func<Pieces, int[]>> moves = new Dictionary<pieces, Func<Pieces, int[]>> 
+        public static Dictionary<pieces, Func<Pieces, Move>> moves = new Dictionary<pieces, Func<Pieces, Move>>
         {
-            {pieces.PAWN, PawnMove }
+            {pieces.PAWN, Pawn }
         };
 
-        public static int[] PawnMove(Pieces p)
+        public static Move Pawn(Pieces p)
         {
             if (Chess_.tour == 0)
             {
                 if (p.firstMove)
                 {
-                    return new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos + (Chess_.board.squaresPerColumn) * 2 };
+                    return new(new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos + (Chess_.board.squaresPerColumn) * 2 });
                 }
-                return new int[] { p.pos + Chess_.board.squaresPerColumn };
+                return new(new int[] { p.pos + Chess_.board.squaresPerColumn });
             }
             else if (Chess_.tour == 1)
             {
                 if (p.firstMove)
                 {
-                    return new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 };
+                    return new(new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 });
                 }
-                return new int[] { p.pos - Chess_.board.squaresPerColumn };
+                return new(new int[] { p.pos - Chess_.board.squaresPerColumn });
             }
             throw new Exception();
         }
@@ -54,7 +53,7 @@ namespace Chess
         static bool isShowingMoves = false;
 
         public Color couleur;
-        
+
         public pieces nom { get; set; }
 
         public Pieces(pieces n, int p, int player, Color couleur) // player 0 = white, player 1 = black
@@ -86,37 +85,50 @@ namespace Chess
             return false;
         }
 
-        public void ShowMoves()
-        {  
-            int[] moves = PiecesManager.moves[nom](this);
-            for (int i = 0; i < moves.Length; i++)
-            {
-                Color.Pencil(Colors.Red);
-                Program.DrawFullCircle(new(Chess_.board.grille[moves[i]].pos + (Chess_.board.tileSize) / 2, Chess_.board.tileSize.x / 2 - 5));
-            }
-        }
-
-        public void Move()
+        public Move GetMoves()
         {
-            int[] moves = PiecesManager.moves[nom](this);
-            for (int i = 0; i < moves.Length; i++)
-            {
-                if (Program.MouseLeftPressed())
-                {
-                    if (Program.PointInRect(Program.MousePosition(), new(Chess_.board.grille[moves[i]].pos, Chess_.board.tileSize)))
-                    {
-                        pos = moves[i];
-                        firstMove = false;
-                        break;
-                    }
-                }
-            }
+            return PiecesManager.moves[nom](this);
         }
     }
 
-    class Moves
+    class Move
     {
-        static Pieces? dernierPionClique;
+        public int[] casesPossibles;
+        public Move(int[] casesPossibles)
+        {
+            this.casesPossibles = casesPossibles;
+        }
 
+        public void ShowMoves()
+        {
+
+            for (int i = 0; i < casesPossibles.Length; i++)
+            {
+                Color.Pencil(Colors.Red);
+                Program.DrawFullCircle(new(Chess_.board.grille[casesPossibles[i]].pos + (Chess_.board.tileSize) / 2, Chess_.board.tileSize.x / 2 - 5));
+            }
+        }
+
+        public void Apply(Pieces p, int pos)
+        {
+            p.pos = pos;
+            p.firstMove = false;
+        }
+
+        public int isClicked()
+        {
+            for (int i = 0; i < casesPossibles.Length; i++)
+            {
+                if (Program.MouseLeftPressed())
+                {
+                    if (Program.PointInRect(Program.MousePosition(), new(Chess_.board.grille[casesPossibles[i]].pos, Chess_.board.tileSize)))
+                    {
+                        return casesPossibles[i];
+                    }
+                }
+            }
+            return -1;
+            //throw new NotImplementedException();
+        }
     }
 }

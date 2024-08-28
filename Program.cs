@@ -2,7 +2,6 @@
 using SDL2;
 using System.Runtime.InteropServices;
 using static SDL2.SDL;
-using Ludo;
 
 /*
  * Petite librairie chill développée par James Tizanou à partir du 04/06/2024 (04 juin 2024)
@@ -445,7 +444,7 @@ namespace Main
         public static IntPtr renderer;
         public static bool running = true;
         static byte[] old_key_state;
-        static uint old_m_state = SDL_GetMouseState(out int x, out int y);
+        static uint old_m_state;
 
         static void Main()
         {
@@ -746,14 +745,24 @@ namespace Main
 
         public static bool MouseLeftPressed()
         {
-            var state = SDL_GetMouseState(out int x, out int y);
-            return (state & SDL_BUTTON_LMASK) != 0 /*&& state != old_m_state*/;
+            bool l_cur = MouseLeftHeld();
+            bool l_old = ((old_m_state & SDL_BUTTON_LMASK) != 0);
+            return (l_cur && !l_old);
         }
 
         public static bool MouseRightPressed()
         {
-            var state = SDL_GetMouseState(out int x, out int y);
-            return (state & SDL_BUTTON_RMASK) != 0 /*&& state != old_m_state*/;
+            bool l_cur = MouseRightHeld();
+            bool l_old = ((old_m_state & SDL_BUTTON_RMASK) != 0);
+            return (l_cur && !l_old);
+        }
+
+        public static bool MouseLeftReleased()
+        {
+            bool l_cur = MouseLeftHeld();
+            bool l_old = ((old_m_state & SDL_BUTTON_LMASK) != 0);
+
+            return (!l_cur && l_old);
         }
 
         #endregion
@@ -776,10 +785,12 @@ namespace Main
             Clear();
 
             // update the key state at every frame a la fin
-            UpdateKeyInfo();
+
 
             //Ludo_.Ludo();
             Chess_.Chess();
+
+            UpdateKeyInfo();
 
             // Switches out the currently presented render surface with the one we just did work on.
             SDL_RenderPresent(renderer);
