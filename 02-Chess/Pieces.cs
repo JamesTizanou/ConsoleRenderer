@@ -3,17 +3,29 @@ using static Chess.Pieces;
 
 namespace Chess
 {
+    public enum pieces
+    {
+        PAWN,
+        BISHOP,
+        KNIGHT,
+        ROOK,
+        KING,
+        QUEEN
+    }
     class PiecesManager
     {
-        public static Dictionary<pieces, Func<Pieces, int[]>> moves;
+        public static Dictionary<pieces, Func<Pieces, int[]>> moves = new Dictionary<pieces, Func<Pieces, int[]>> 
+        {
+            {pieces.PAWN, PawnMove }
+        };
 
-        static int[] PawnMove(Pieces p)
+        public static int[] PawnMove(Pieces p)
         {
             if (Chess_.tour == 0)
             {
                 if (p.firstMove)
                 {
-                    return new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 };
+                    return new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos + (Chess_.board.squaresPerColumn) * 2 };
                 }
                 return new int[] { p.pos - Chess_.board.squaresPerColumn };
             }
@@ -21,7 +33,7 @@ namespace Chess
             {
                 if (p.firstMove)
                 {
-                    return new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos + (Chess_.board.squaresPerColumn) * 2 };
+                    return new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 };
                 }
                 return new int[] { p.pos + Chess_.board.squaresPerColumn };
             }
@@ -41,59 +53,58 @@ namespace Chess
 
         static bool isShowingMoves = false;
 
-        string pawn = "pawn.";
-        string bishop = "bishop.";
-        string knight = "knight.";
-        string rook = "rook.";
-        string king = "king.";
-        string queen = "queen.";
-        public enum pieces
-        {
-            PAWN,
-            BISHOP,
-            KNIGHT,
-            ROOK,
-            KING,
-            QUEEN
-        }
+        public Color couleur;
+        
         public pieces nom { get; set; }
 
-        public Pieces(pieces n, int p, int player) // player 0 = white, player 1 = black
+        public Pieces(pieces n, int p, int player, Color couleur) // player 0 = white, player 1 = black
         {
             nom = n;
             pos = p;
-            image = nom.ToString().ToLower() + ".png";
+            image = nom.ToString().ToLower() + ".png"; // PAWN => pawn.png
             this.player = player;
+            this.couleur = couleur;
         }
 
         public void Draw()
         {
+            ShowMoves();
             Program.DrawImage(image, Chess_.board.grille[pos].pos, Chess_.board.tileSize); // à refaire
+            ShowMoves();
         }
 
         bool ClickSurPiece()
         {
             if (player == Chess_.tour)
             {
-                if (true)
+                if (Program.MouseLeftPressed())
                 {
-
+                    if (Program.PointInRect(Program.MousePosition(), new(Chess_.board.grille[pos].pos, Chess_.board.tileSize)))
+                    {
+                        return true;
+                    }
                 }
             }
-            return true;
+            return false;
         }
 
         public void ShowMoves()
         {
             if (ClickSurPiece())
             {
-                if (!isShowingMoves)
+                isShowingMoves = true;
+            }
+            else if (Program.MouseLeftPressed() && !ClickSurPiece())
+            {
+                isShowingMoves = false;
+            }
+            if (isShowingMoves)
+            {
+                int[] moves = PiecesManager.moves[nom](this); // rendu ici
+                for (int i = 0; i < moves.Length; i++)
                 {
-                    int[] moves = PiecesManager.moves[nom](this);
-                    for (int i = 0; i < moves.Length; i++)
-                    {
-                        Program.DrawFullCircle(new(Chess_.board.grille[i].pos + (Chess_.board.grille[i].pos) / 2, Chess_.board.tileSize.x / 2 - 5));
-                    }
+                    Color.Pencil(Colors.Red);
+                    Program.DrawFullCircle(new(Chess_.board.grille[moves[i]].pos + (Chess_.board.tileSize) / 2, Chess_.board.tileSize.x / 2 - 5));
                 }
             }
         }

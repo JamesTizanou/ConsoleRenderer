@@ -8,7 +8,8 @@ namespace Chess
         static Colors couleur1 = Colors.White;
         static Colors couleur2 = Colors.Black;
         public static Grid board = new Grid(new(100, 100), new(t, t), 8, 8, couleur1);
-        public static int tour = 0;
+        public static int tour = 1;
+        static bool FirstExec = true;
         
 
         static List<int> casesNoires()
@@ -30,10 +31,14 @@ namespace Chess
         }
 
         static Vector2D<int> posImage = new(100, 100);
+        static Pieces whitePawn = new(pieces.PAWN, 50, 1, (Color)Colors.White);
+        //static Pieces BlackPawn = new(pieces.PAWN, 3, 0, (Color)Colors.Black);
         public static void Chess()
         {
             board.Display(true);
             board.Personalize(casesNoires(), couleur2);
+            whitePawn.Draw();
+            //BlackPawn.Draw();
         }
     }
 }
