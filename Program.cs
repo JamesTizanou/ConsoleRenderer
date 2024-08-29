@@ -16,6 +16,7 @@ using static SDL2.SDL;
 namespace Main
 {
     #region classes
+
     class Vector2D<Numeric>
     {
         public Numeric? x;
@@ -416,6 +417,11 @@ namespace Main
         public int GetColonne(int nb)
         {
             return nb % squaresPerColumn;
+        }
+
+        public int GetCoordinates(int x, int y)
+        {
+            return y * squaresPerColumn + x;
         }
     }
     #endregion

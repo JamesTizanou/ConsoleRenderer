@@ -102,20 +102,44 @@ namespace Chess
 
         public Color couleur;
 
+        public Vector2D<float> truePos { get; set; } = new(0, 0);
+
         public pieces nom { get; set; }
 
         public Pieces(pieces n, int p, int player, Color couleur) // player 0 = white, player 1 = black
         {
             nom = n;
             pos = p;
-            image = nom.ToString().ToLower() + ".png"; // PAWN => pawn.png
             this.player = player;
             this.couleur = couleur;
+            truePos.x = (float)Chess_.board.grille[pos].pos.x;
+            truePos.y = (float)Chess_.board.grille[pos].pos.y;
+            string arg = "WHITE";
+            if (player == 0)
+            {
+                arg = "BLACK";
+            }
+            image = "Images/" + nom.ToString() + "_" + arg + ".png"; // PAWN => pawn.png
+        }
+
+        float Lerp(float firstFloat, float secondFloat, float by)
+        {
+            return firstFloat * (1 - by) + secondFloat * by;
+        }
+
+        Vector2D<float> Lerp(Vector2D<int> firstFloat, Vector2D<float> secondFloat, float by)
+        {
+            Lerp(firstFloat.x, secondFloat.x, by);
+            Lerp(firstFloat.y, secondFloat.y, by);
+            return new Vector2D<float>(Lerp(firstFloat.x, secondFloat.x, by), Lerp(firstFloat.y, secondFloat.y, by));
         }
 
         public void Draw()
         {
-            Program.DrawImage(image, Chess_.board.grille[pos].pos, Chess_.board.tileSize); // à refaire
+            Vector2D<int> posF = Chess_.board.grille[pos].pos;
+            truePos = Lerp(posF, truePos, 0.9F);
+            Vector2D<int> a = new((int)truePos.x, (int)truePos.y);
+            Program.DrawImage(image, /*Chess_.board.grille[pos].pos*/ a, Chess_.board.tileSize); // à refaire
         }
 
         public bool ClickSurPiece()
@@ -161,6 +185,16 @@ namespace Chess
         {
             p.pos = pos;
             p.firstMove = false;
+            for (int i = 0;i < Chess_._Pieces.Count;i++)
+            {
+                if (Chess_._Pieces[i].player != Chess_.tour)
+                {
+                    if (Chess_._Pieces[i].pos == pos)
+                    {
+                        Chess_._Pieces.RemoveAt(i);
+                    }
+                }
+            }
             Chess_.ChangeTurn();
         }
 

@@ -38,7 +38,7 @@ namespace Chess
             if (Program.MouseLeftPressed())
             {
                 bool found = false;
-                if (lastMoves != null)
+                if (lastMoves != null && lastClicked != null)
                 {
                     int p = lastMoves.isClicked();
                     if (p >= 0)
@@ -62,6 +62,7 @@ namespace Chess
                 if (!found)
                 {
                     lastClicked = null;
+                    lastMoves = null;
                 }
             }
             if (lastClicked != null)
