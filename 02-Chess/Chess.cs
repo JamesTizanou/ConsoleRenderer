@@ -11,7 +11,7 @@ namespace Chess
         public static int tour = 1;
         static bool FirstExec = true;
 
-        static List<Pieces> _Pieces = new() { new(pieces.PAWN, 50, 1, (Color)Colors.White) };
+        public static List<Pieces> _Pieces = new() { new(pieces.PAWN, 50, 1, (Color)Colors.White), new(pieces.PAWN, 18, 1, (Color)Colors.White) , new(pieces.PAWN, 19, 0, (Color)Colors.Black), new(pieces.PAWN, 17, 0, (Color)Colors.Black) };
 
 
         static List<int> casesNoires()
@@ -91,6 +91,12 @@ namespace Chess
                 Console.WriteLine("allo");
             }
             //BlackPawn.Draw();
+        }
+
+        public static void ChangeTurn()
+        {
+            if (tour == 0) { tour = 1; return; }
+            if (tour == 1) { tour = 0; }
         }
     }
 }

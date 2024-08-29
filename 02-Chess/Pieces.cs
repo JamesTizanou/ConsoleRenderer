@@ -1,4 +1,5 @@
 ﻿using Main;
+using System.Xml;
 
 namespace Chess
 {
@@ -24,19 +25,66 @@ namespace Chess
             {
                 if (p.firstMove)
                 {
-                    return new(new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos + (Chess_.board.squaresPerColumn) * 2 });
+                    return new(new List<int> { p.pos + Chess_.board.squaresPerColumn, p.pos + (Chess_.board.squaresPerColumn) * 2 });
                 }
-                return new(new int[] { p.pos + Chess_.board.squaresPerColumn });
+                List<int> possibilities = new() { p.pos + Chess_.board.squaresPerColumn };
+                possibilities = FiltrerMoves(p, possibilities);
+                return new(possibilities);
             }
             else if (Chess_.tour == 1)
             {
                 if (p.firstMove)
                 {
-                    return new(new int[] { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 });
+                    return new(new List<int> { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 });
                 }
-                return new(new int[] { p.pos - Chess_.board.squaresPerColumn });
+                List<int> possibilities = new(){ p.pos - Chess_.board.squaresPerColumn };
+                possibilities = FiltrerMoves(p, possibilities);
+                return new(possibilities);
             }
             throw new Exception();
+        }
+
+        static List<int> FiltrerMoves(Pieces p, List<int> poss) // retourne toutes les cases de mes moves possibles qui ne sont pas occupées par mes autres pions
+        {
+            for (int i = 0; i < Chess_._Pieces.Count; i++)
+            {
+                if (Chess_._Pieces[i].player == p.player)
+                {
+                    for (int j = 0; j < poss.Count; j++)
+                    {
+                        if (Chess_._Pieces[i].pos == poss[j])
+                        {
+                            poss.RemoveAt(j);
+                        }
+                    }
+                }
+                else
+                {
+                    if (p.player == 1)
+                    {
+                        if (p.pos - 7 == Chess_._Pieces[i].pos)
+                        {
+                            poss.Add(p.pos - 7);
+                        }
+                        else if (p.pos - 9 == Chess_._Pieces[i].pos)
+                        {
+                            poss.Add(p.pos - 9);
+                        }
+                    }
+                    else
+                    {
+                        if (p.pos + 7 == Chess_._Pieces[i].pos)
+                        {
+                            poss.Add(p.pos + 7);
+                        }
+                        else if (p.pos + 9 == Chess_._Pieces[i].pos)
+                        {
+                            poss.Add(p.pos + 9);
+                        }
+                    }
+                }
+            }
+            return poss;
         }
     }
 
@@ -93,8 +141,8 @@ namespace Chess
 
     class Move
     {
-        public int[] casesPossibles;
-        public Move(int[] casesPossibles)
+        public List<int> casesPossibles = new();
+        public Move(List<int> casesPossibles)
         {
             this.casesPossibles = casesPossibles;
         }
@@ -102,7 +150,7 @@ namespace Chess
         public void ShowMoves()
         {
 
-            for (int i = 0; i < casesPossibles.Length; i++)
+            for (int i = 0; i < casesPossibles.Count; i++)
             {
                 Color.Pencil(Colors.Red);
                 Program.DrawFullCircle(new(Chess_.board.grille[casesPossibles[i]].pos + (Chess_.board.tileSize) / 2, Chess_.board.tileSize.x / 2 - 5));
@@ -113,11 +161,12 @@ namespace Chess
         {
             p.pos = pos;
             p.firstMove = false;
+            Chess_.ChangeTurn();
         }
 
         public int isClicked()
         {
-            for (int i = 0; i < casesPossibles.Length; i++)
+            for (int i = 0; i < casesPossibles.Count; i++)
             {
                 if (Program.MouseLeftPressed())
                 {
@@ -128,7 +177,6 @@ namespace Chess
                 }
             }
             return -1;
-            //throw new NotImplementedException();
         }
     }
 }
