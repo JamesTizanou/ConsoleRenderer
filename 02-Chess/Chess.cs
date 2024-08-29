@@ -1,5 +1,8 @@
 ﻿using Main;
 
+// TODO:
+// Fix l'algorithme du pawn pour manger, car de la façon dont il est fait maintenant, un pawn pourrait manger une pièce qui 'est pas directement à sa diagonale 
+
 namespace Chess
 {
     class Chess_
@@ -11,7 +14,14 @@ namespace Chess
         public static int tour = 1;
         static bool FirstExec = true;
 
-        public static List<Pieces> _Pieces = new() { new(pieces.PAWN, 50, 1, (Color)Colors.White), new(pieces.PAWN, 18, 1, (Color)Colors.White) , new(pieces.PAWN, 19, 0, (Color)Colors.Black), new(pieces.PAWN, 17, 0, (Color)Colors.Black) };
+        public static List<Pieces> _Pieces = new() 
+        { 
+            new(pieces.PAWN, 50, 1, (Color)Colors.White), 
+            new(pieces.PAWN, 18, 1, (Color)Colors.White), 
+            new(pieces.PAWN, 19, 0, (Color)Colors.Black), 
+            new(pieces.PAWN, 17, 0, (Color)Colors.Black),
+            new(pieces.KNIGHT, 17, 0, (Color)Colors.Black)
+        };
 
 
         static List<int> casesNoires()
