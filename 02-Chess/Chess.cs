@@ -16,11 +16,46 @@ namespace Chess
 
         public static List<Pieces> _Pieces = new()
         {
+            new(pieces.PAWN, 8, 0, (Color)Colors.White),
+            new(pieces.PAWN, 9, 0, (Color)Colors.White),
+            new(pieces.PAWN, 10, 0, (Color)Colors.White),
+            new(pieces.PAWN, 11, 0, (Color)Colors.White),
+            new(pieces.PAWN, 12, 0, (Color)Colors.White),
+            new(pieces.PAWN, 13, 0, (Color)Colors.White),
+            new(pieces.PAWN, 14, 0, (Color)Colors.White),
+            new(pieces.PAWN, 15, 0, (Color)Colors.White),
+
+            new(pieces.ROOK, 0, 0, (Color)Colors.White),
+            new(pieces.KNIGHT, 1, 0, (Color)Colors.White),
+            new(pieces.BISHOP, 2, 0, (Color)Colors.White),
+            new(pieces.QUEEN, 3, 0, (Color)Colors.White),
+            new(pieces.KING, 4, 0, (Color)Colors.White),
+            new(pieces.BISHOP, 5, 0, (Color)Colors.White),
+            new(pieces.KNIGHT, 6, 0, (Color)Colors.White),
+            new(pieces.ROOK, 7, 0, (Color)Colors.White),
+
+
+
+            new(pieces.PAWN, 48, 1, (Color)Colors.White),
+            new(pieces.PAWN, 49, 1, (Color)Colors.White),
             new(pieces.PAWN, 50, 1, (Color)Colors.White),
-            new(pieces.PAWN, 19, 1, (Color)Colors.White),
-            new(pieces.PAWN, 18, 0, (Color)Colors.Black),
+            new(pieces.PAWN, 51, 1, (Color)Colors.White),
+            new(pieces.PAWN, 52, 1, (Color)Colors.White),
+            new(pieces.PAWN, 53, 1, (Color)Colors.White),
+            new(pieces.PAWN, 54, 1, (Color)Colors.White),
+            new(pieces.PAWN, 55, 1, (Color)Colors.White),
+
+            new(pieces.ROOK, 56, 1, (Color)Colors.White),
+            new(pieces.KNIGHT, 57, 1, (Color)Colors.White),
+            new(pieces.BISHOP, 58, 1, (Color)Colors.White),
+            new(pieces.QUEEN, 59, 1, (Color)Colors.White),
+            new(pieces.KING, 60, 1, (Color)Colors.White),
+            new(pieces.BISHOP, 61, 1, (Color)Colors.White),
+            new(pieces.KNIGHT, 62, 1, (Color)Colors.White),
+            new(pieces.ROOK, 63, 1, (Color)Colors.White),
+
             //new(pieces.PAWN, 17, 0, (Color)Colors.Black),
-            new(pieces.KNIGHT, 45, 0, (Color)Colors.Black)
+            //new(pieces.KNIGHT, 45, 0, (Color)Colors.Black)
         };
 
 

@@ -21,57 +21,50 @@ namespace Chess
 
         public static Move Pawn(Pieces p)
         {
-            if (Chess_.tour == 0)
+            int ind = 0;
+            if (p.player == 0) { ind = 1; } else { ind = -1; }
+            if (p.firstMove)
             {
-                if (p.firstMove)
-                {
-                    return new(new List<int> { p.pos + Chess_.board.squaresPerColumn, p.pos + (Chess_.board.squaresPerColumn) * 2 });
-                }
-                List<int> possibilities = new() { p.pos + Chess_.board.squaresPerColumn };
-                for (int i = 0; i < Chess_._Pieces.Count; i++)
-                {
-                    if (p.pos + 7 == Chess_._Pieces[i].pos)
-                    {
-                        possibilities.Add(p.pos + 7);
-                    }
-                    else if (p.pos + 9 == Chess_._Pieces[i].pos)
-                    {
-                        possibilities.Add(p.pos + 9);
-                    }
-                }
-                possibilities = FiltrerMoves(p, possibilities);
-                return new(possibilities);
+                return new(new List<int> { p.pos + Chess_.board.squaresPerColumn * ind, p.pos + (Chess_.board.squaresPerColumn) * 2 * ind });
             }
-            else if (Chess_.tour == 1)
+            List<int> possibilities = new() { p.pos + Chess_.board.squaresPerColumn * ind };
+            for (int i = 0; i < Chess_._Pieces.Count; i++)
             {
-                if (p.firstMove)
+                if (p.pos + 7 * ind == Chess_._Pieces[i].pos)
                 {
-                    return new(new List<int> { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 });
+                    possibilities.Add(p.pos + 7 * ind);
                 }
-                List<int> possibilities = new() { p.pos - Chess_.board.squaresPerColumn };
-                for (int i = 0; i < Chess_._Pieces.Count; i++)
+                else if (p.pos + 9 * ind == Chess_._Pieces[i].pos)
                 {
-                    if (p.pos - 7 == Chess_._Pieces[i].pos)
-                    {
-                        possibilities.Add(p.pos - 7);
-                    }
-                    else if (p.pos - 9 == Chess_._Pieces[i].pos)
-                    {
-                        possibilities.Add(p.pos - 9);
-                    }
+                    possibilities.Add(p.pos + 9 * ind);
                 }
-                possibilities = FiltrerMoves(p, possibilities);
-                return new(possibilities);
             }
-            throw new Exception();
+            possibilities = FiltrerMoves(p, possibilities);
+            return new(possibilities);
         }
 
 
 
         public static Move Knight(Pieces p)
         {
+            /*int m1 = 6;
+            int m2 = 10;
+            int m3 = 15;
+            int m4 = 17;*/
             List<int> poss = new List<int>() { p.pos - 6, p.pos - 15, p.pos - 17, p.pos - 10, p.pos + 6, p.pos + 15, p.pos + 17, p.pos + 10 };
             poss = FiltrerMoves(p, poss);
+            for (int i = 0; i < poss.Count; i++)
+            {
+                if (Math.Abs(Chess_.board.GetColonne(p.pos) - Chess_.board.GetColonne(poss[i])) == 2 || Math.Abs(Chess_.board.GetRangee(p.pos) - Chess_.board.GetRangee(poss[i])) == 2) // mauvais algorithme, c'est pour tester
+                {
+
+                }
+                else
+                {
+                    poss.RemoveAt(i);
+                }
+            }
+
             return new(poss);
         }
 
