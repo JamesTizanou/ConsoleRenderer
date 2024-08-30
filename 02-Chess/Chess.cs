@@ -14,13 +14,13 @@ namespace Chess
         public static int tour = 1;
         static bool FirstExec = true;
 
-        public static List<Pieces> _Pieces = new() 
-        { 
-            new(pieces.PAWN, 50, 1, (Color)Colors.White), 
-            new(pieces.PAWN, 18, 1, (Color)Colors.White), 
-            new(pieces.PAWN, 19, 0, (Color)Colors.Black), 
-            new(pieces.PAWN, 17, 0, (Color)Colors.Black),
-            new(pieces.KNIGHT, 17, 0, (Color)Colors.Black)
+        public static List<Pieces> _Pieces = new()
+        {
+            new(pieces.PAWN, 50, 1, (Color)Colors.White),
+            new(pieces.PAWN, 19, 1, (Color)Colors.White),
+            new(pieces.PAWN, 18, 0, (Color)Colors.Black),
+            //new(pieces.PAWN, 17, 0, (Color)Colors.Black),
+            new(pieces.KNIGHT, 45, 0, (Color)Colors.Black)
         };
 
 
@@ -94,7 +94,6 @@ namespace Chess
             for (int i = 0; i < _Pieces.Count; i++)
             {
                 _Pieces[i].Draw();
-
             }
             ChoixPion();
             if (tour == 0)

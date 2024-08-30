@@ -1,5 +1,4 @@
 ﻿using Main;
-using System.Xml;
 
 namespace Chess
 {
@@ -16,7 +15,8 @@ namespace Chess
     {
         public static Dictionary<pieces, Func<Pieces, Move>> moves = new Dictionary<pieces, Func<Pieces, Move>>
         {
-            {pieces.PAWN, Pawn }
+            {pieces.PAWN, Pawn },
+            {pieces.KNIGHT, Knight }
         };
 
         public static Move Pawn(Pieces p)
@@ -28,6 +28,17 @@ namespace Chess
                     return new(new List<int> { p.pos + Chess_.board.squaresPerColumn, p.pos + (Chess_.board.squaresPerColumn) * 2 });
                 }
                 List<int> possibilities = new() { p.pos + Chess_.board.squaresPerColumn };
+                for (int i = 0; i < Chess_._Pieces.Count; i++)
+                {
+                    if (p.pos + 7 == Chess_._Pieces[i].pos)
+                    {
+                        possibilities.Add(p.pos + 7);
+                    }
+                    else if (p.pos + 9 == Chess_._Pieces[i].pos)
+                    {
+                        possibilities.Add(p.pos + 9);
+                    }
+                }
                 possibilities = FiltrerMoves(p, possibilities);
                 return new(possibilities);
             }
@@ -37,11 +48,31 @@ namespace Chess
                 {
                     return new(new List<int> { p.pos - Chess_.board.squaresPerColumn, p.pos - (Chess_.board.squaresPerColumn) * 2 });
                 }
-                List<int> possibilities = new(){ p.pos - Chess_.board.squaresPerColumn };
+                List<int> possibilities = new() { p.pos - Chess_.board.squaresPerColumn };
+                for (int i = 0; i < Chess_._Pieces.Count; i++)
+                {
+                    if (p.pos - 7 == Chess_._Pieces[i].pos)
+                    {
+                        possibilities.Add(p.pos - 7);
+                    }
+                    else if (p.pos - 9 == Chess_._Pieces[i].pos)
+                    {
+                        possibilities.Add(p.pos - 9);
+                    }
+                }
                 possibilities = FiltrerMoves(p, possibilities);
                 return new(possibilities);
             }
             throw new Exception();
+        }
+
+
+
+        public static Move Knight(Pieces p)
+        {
+            List<int> poss = new List<int>() { p.pos - 6, p.pos - 15, p.pos - 17, p.pos - 10, p.pos + 6, p.pos + 15, p.pos + 17, p.pos + 10 };
+            poss = FiltrerMoves(p, poss);
+            return new(poss);
         }
 
         static List<int> FiltrerMoves(Pieces p, List<int> poss) // retourne toutes les cases de mes moves possibles qui ne sont pas occupées par mes autres pions
@@ -52,34 +83,9 @@ namespace Chess
                 {
                     for (int j = 0; j < poss.Count; j++)
                     {
-                        if (Chess_._Pieces[i].pos == poss[j])
+                        if (poss[j] < 0 || poss[j] > 63 || Chess_._Pieces[i].pos == poss[j])
                         {
                             poss.RemoveAt(j);
-                        }
-                    }
-                }
-                else
-                {
-                    if (p.player == 1)
-                    {
-                        if (p.pos - 7 == Chess_._Pieces[i].pos)
-                        {
-                            poss.Add(p.pos - 7);
-                        }
-                        else if (p.pos - 9 == Chess_._Pieces[i].pos)
-                        {
-                            poss.Add(p.pos - 9);
-                        }
-                    }
-                    else
-                    {
-                        if (p.pos + 7 == Chess_._Pieces[i].pos)
-                        {
-                            poss.Add(p.pos + 7);
-                        }
-                        else if (p.pos + 9 == Chess_._Pieces[i].pos)
-                        {
-                            poss.Add(p.pos + 9);
                         }
                     }
                 }
@@ -177,7 +183,10 @@ namespace Chess
             for (int i = 0; i < casesPossibles.Count; i++)
             {
                 Color.Pencil(Colors.Red);
-                Program.DrawFullCircle(new(Chess_.board.grille[casesPossibles[i]].pos + (Chess_.board.tileSize) / 2, Chess_.board.tileSize.x / 2 - 5));
+                if (casesPossibles[i] >= 0 && casesPossibles[i] <= 63)
+                {
+                    Program.DrawFullCircle(new(Chess_.board.grille[casesPossibles[i]].pos + (Chess_.board.tileSize) / 2, Chess_.board.tileSize.x / 2 - 5));
+                }
             }
         }
 
@@ -185,7 +194,7 @@ namespace Chess
         {
             p.pos = pos;
             p.firstMove = false;
-            for (int i = 0;i < Chess_._Pieces.Count;i++)
+            for (int i = 0; i < Chess_._Pieces.Count; i++)
             {
                 if (Chess_._Pieces[i].player != Chess_.tour)
                 {
