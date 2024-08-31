@@ -58,6 +58,30 @@ namespace Chess
             //new(pieces.KNIGHT, 45, 0, (Color)Colors.Black)
         };
 
+        public static bool CaseVide(int c)
+        {
+            for (int i = 0; i < _Pieces.Count; i++)
+            {
+                if (c == _Pieces[i].pos)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static bool CaseEnnemie(int j, int c)
+        {
+            for (int i = 0; i < _Pieces.Count; i++)
+            {
+                if (c == _Pieces[i].pos && tour != j)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
 
         static List<int> casesNoires()
         {

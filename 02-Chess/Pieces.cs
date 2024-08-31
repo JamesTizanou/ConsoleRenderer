@@ -1,4 +1,5 @@
 ﻿using Main;
+using System.Runtime.CompilerServices;
 
 namespace Chess
 {
@@ -16,7 +17,9 @@ namespace Chess
         public static Dictionary<pieces, Func<Pieces, Move>> moves = new Dictionary<pieces, Func<Pieces, Move>>
         {
             {pieces.PAWN, Pawn },
-            {pieces.KNIGHT, Knight }
+            {pieces.KNIGHT, Knight },
+            {pieces.ROOK, Rook },
+            {pieces.BISHOP, Bishop }
         };
 
         public static Move Pawn(Pieces p)
@@ -27,7 +30,11 @@ namespace Chess
             {
                 return new(new List<int> { p.pos + Chess_.board.squaresPerColumn * ind, p.pos + (Chess_.board.squaresPerColumn) * 2 * ind });
             }
-            List<int> possibilities = new() { p.pos + Chess_.board.squaresPerColumn * ind };
+            List<int> possibilities = new();
+            if (Chess_.CaseVide(p.pos + Chess_.board.squaresPerColumn * ind))
+            { 
+                possibilities.Add(p.pos + Chess_.board.squaresPerColumn * ind);
+            }
             for (int i = 0; i < Chess_._Pieces.Count; i++)
             {
                 if (p.pos + 7 * ind == Chess_._Pieces[i].pos)
@@ -68,6 +75,68 @@ namespace Chess
             return new(poss);
         }
 
+        public static Move Rook(Pieces p)
+        {
+            List<int> poss = new();
+            for (int i = p.pos - 8; i >= 0; i -= 8)
+            {
+                if (Chess_.CaseVide(i)) { poss.Add(i);}
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break;}
+            }
+            for (int i = p.pos + 8; i <= 63; i += 8)
+            {
+                if (Chess_.CaseVide(i)) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; } 
+                else { break; }
+            }
+            for (int i = p.pos + 1; i <= 8 * Chess_.board.GetRangee(p.pos) + 7; i++)
+            {
+                if (Chess_.CaseVide(i)) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            for (int i = p.pos - 1; i >= 8 * Chess_.board.GetRangee(p.pos); i--)
+            {
+                if (Chess_.CaseVide(i)) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            poss = FiltrerMoves(p,poss);
+            return new(poss);
+        }
+
+        public static Move Bishop(Pieces p)
+        {
+            List<int> poss = new();
+            for (int i = p.pos - 9; i < 1000; i-= 9)
+            {
+                if (Chess_.CaseVide(i) && i % 8 != 7 && i > 7) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            for (int i = p.pos - 7; i < 1000; i -= 7)
+            {
+                if (Chess_.CaseVide(i) && i % 8 != 0 && i > 7) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            for (int i = p.pos + 7; i < 1000; i += 7)
+            {
+                if (Chess_.CaseVide(i) && i % 8 != 0 && i < 56) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            for (int i = p.pos + 9; i < 1000; i += 9)
+            {
+                if (Chess_.CaseVide(i) && i % 8 != 7 && i < 56) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            poss = FiltrerMoves(p, poss);
+            return new(poss);
+        }
+
         static List<int> FiltrerMoves(Pieces p, List<int> poss) // retourne toutes les cases de mes moves possibles qui ne sont pas occupées par mes autres pions
         {
             for (int i = 0; i < Chess_._Pieces.Count; i++)
@@ -97,8 +166,6 @@ namespace Chess
 
         public bool firstMove = true;
 
-        static bool isShowingMoves = false;
-
         public Color couleur;
 
         public Vector2D<float> truePos { get; set; } = new(0, 0);
@@ -111,14 +178,14 @@ namespace Chess
             pos = p;
             this.player = player;
             this.couleur = couleur;
-            truePos.x = (float)Chess_.board.grille[pos].pos.x;
-            truePos.y = (float)Chess_.board.grille[pos].pos.y;
+            truePos.x = Chess_.board.grille[pos].pos.x;
+            truePos.y = Chess_.board.grille[pos].pos.y;
             string arg = "WHITE";
             if (player == 0)
             {
                 arg = "BLACK";
             }
-            image = "Images/" + nom.ToString() + "_" + arg + ".png"; // PAWN => pawn.png
+            image = "Images/" + nom.ToString() + "_" + arg + ".png";
         }
 
         float Lerp(float firstFloat, float secondFloat, float by)
