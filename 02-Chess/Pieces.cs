@@ -19,18 +19,21 @@ namespace Chess
             {pieces.PAWN, Pawn },
             {pieces.KNIGHT, Knight },
             {pieces.ROOK, Rook },
-            {pieces.BISHOP, Bishop }
+            {pieces.BISHOP, Bishop },
+            {pieces.QUEEN, Queen },
+            {pieces.KING, King }
         };
 
         public static Move Pawn(Pieces p)
         {
             int ind = 0;
+            List<int> possibilities = new();
             if (p.player == 0) { ind = 1; } else { ind = -1; }
             if (p.firstMove)
             {
-                return new(new List<int> { p.pos + Chess_.board.squaresPerColumn * ind, p.pos + (Chess_.board.squaresPerColumn) * 2 * ind });
+                possibilities.Add( /*p.pos + Chess_.board.squaresPerColumn * ind,*/ p.pos + (Chess_.board.squaresPerColumn) * 2 * ind );
             }
-            List<int> possibilities = new();
+            
             if (Chess_.CaseVide(p.pos + Chess_.board.squaresPerColumn * ind))
             { 
                 possibilities.Add(p.pos + Chess_.board.squaresPerColumn * ind);
@@ -59,7 +62,6 @@ namespace Chess
             int m3 = 15;
             int m4 = 17;*/
             List<int> poss = new List<int>() { p.pos - 6, p.pos - 15, p.pos - 17, p.pos - 10, p.pos + 6, p.pos + 15, p.pos + 17, p.pos + 10 };
-            poss = FiltrerMoves(p, poss);
             for (int i = 0; i < poss.Count; i++)
             {
                 if (Math.Abs(Chess_.board.GetColonne(p.pos) - Chess_.board.GetColonne(poss[i])) == 2 || Math.Abs(Chess_.board.GetRangee(p.pos) - Chess_.board.GetRangee(poss[i])) == 2) // mauvais algorithme, c'est pour tester
@@ -71,7 +73,7 @@ namespace Chess
                     poss.RemoveAt(i);
                 }
             }
-
+            poss = FiltrerMoves(p, poss);
             return new(poss);
         }
 
@@ -109,31 +111,84 @@ namespace Chess
         public static Move Bishop(Pieces p)
         {
             List<int> poss = new();
-            for (int i = p.pos - 9; i < 1000; i-= 9)
+            if (p.pos % 8 != 0)
             {
-                if (Chess_.CaseVide(i) && i % 8 != 7 && i > 7) { poss.Add(i); }
-                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
-                else { break; }
+                poss.AddRange(UpLeft(p));
+                poss.AddRange(DownLeft(p));
             }
-            for (int i = p.pos - 7; i < 1000; i -= 7)
+            if (p.pos % 8 != 7)
             {
-                if (Chess_.CaseVide(i) && i % 8 != 0 && i > 7) { poss.Add(i); }
-                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
-                else { break; }
-            }
-            for (int i = p.pos + 7; i < 1000; i += 7)
-            {
-                if (Chess_.CaseVide(i) && i % 8 != 0 && i < 56) { poss.Add(i); }
-                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
-                else { break; }
-            }
-            for (int i = p.pos + 9; i < 1000; i += 9)
-            {
-                if (Chess_.CaseVide(i) && i % 8 != 7 && i < 56) { poss.Add(i); }
-                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
-                else { break; }
+                poss.AddRange(UpRight(p));
+                poss.AddRange(DownRight(p));
             }
             poss = FiltrerMoves(p, poss);
+            return new(poss);
+        }
+
+        public static List<int> UpLeft(Pieces p)
+        {
+            List<int> poss = new();
+            for (int i = p.pos - 9; i < 1000; i -= 9)
+            {
+                if (Chess_.CaseVide(i) && i % 8 == 0) { poss.Add(i); break; }
+                if (Chess_.CaseVide(i) && i >= 0) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            return poss;
+        }
+
+        public static List<int> DownLeft(Pieces p)
+        {
+            List<int> poss = new();
+            for (int i = p.pos + 7; i < 1000; i += 7)
+            {
+                if (Chess_.CaseVide(i) && i % 8 == 0) { poss.Add(i); break; }
+                if (Chess_.CaseVide(i) && i <= 63) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            return poss;
+        }
+
+        public static List<int> UpRight(Pieces p)
+        {
+            List<int> poss = new();
+            for (int i = p.pos - 7; i < 1000; i -= 7)
+            {
+                if (Chess_.CaseVide(i) && i % 8 == 7) { poss.Add(i); break; }
+                if (Chess_.CaseVide(i) && i >= 0) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            return poss;
+        }
+
+        public static List<int> DownRight(Pieces p)
+        {
+            List<int> poss = new();
+            for (int i = p.pos + 9; i < 1000; i += 9)
+            {
+                if (Chess_.CaseVide(i) && i % 8 == 7) { poss.Add(i); break; }
+                if (Chess_.CaseVide(i) && i <= 63) { poss.Add(i); }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else { break; }
+            }
+            return poss;
+        }
+
+        public static Move Queen(Pieces p)
+        {
+            List<int> poss = new();
+            poss = Bishop(p).casesPossibles;
+            poss.AddRange(Rook(p).casesPossibles);
+            return new(poss);
+        }
+
+        public static Move King(Pieces p) // Il manque retirer les moves qui mettent le roi en Chech mate
+        {
+            List<int> poss = new() { p.pos - 9, p.pos - 8, p.pos - 7, p.pos - 1, p.pos + 1, p.pos + 7, p.pos + 8, p.pos + 9};
+            poss = FiltrerMoves(p,poss);
             return new(poss);
         }
 
