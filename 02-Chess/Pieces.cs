@@ -1,5 +1,4 @@
 ﻿using Main;
-using System.Runtime.CompilerServices;
 
 namespace Chess
 {
@@ -29,13 +28,13 @@ namespace Chess
             int ind = 0;
             List<int> possibilities = new();
             if (p.player == 0) { ind = 1; } else { ind = -1; }
-            if (p.firstMove)
+            if (p.firstMove && Chess_.CaseVide(p.pos + (Chess_.board.squaresPerColumn) * 2 * ind) && Chess_.CaseVide(p.pos + (Chess_.board.squaresPerColumn)))
             {
-                possibilities.Add( /*p.pos + Chess_.board.squaresPerColumn * ind,*/ p.pos + (Chess_.board.squaresPerColumn) * 2 * ind );
+                possibilities.Add(p.pos + (Chess_.board.squaresPerColumn) * 2 * ind);
             }
-            
+
             if (Chess_.CaseVide(p.pos + Chess_.board.squaresPerColumn * ind))
-            { 
+            {
                 possibilities.Add(p.pos + Chess_.board.squaresPerColumn * ind);
             }
             for (int i = 0; i < Chess_._Pieces.Count; i++)
@@ -58,7 +57,7 @@ namespace Chess
         public static Move Knight(Pieces p)
         {
             List<int> poss = new List<int>();
-            if (Chess_.board.GetColonne(p.pos) >= 2 && Chess_.board.GetRangee(p.pos) >= 1){ poss.Add(p.pos - 10);}
+            if (Chess_.board.GetColonne(p.pos) >= 2 && Chess_.board.GetRangee(p.pos) >= 1) { poss.Add(p.pos - 10); }
             if (Chess_.board.GetColonne(p.pos) >= 1 && Chess_.board.GetRangee(p.pos) >= 2) { poss.Add(p.pos - 17); }
             if (Chess_.board.GetColonne(p.pos) >= 2 && Chess_.board.GetRangee(p.pos) <= 6) { poss.Add(p.pos + 6); }
             if (Chess_.board.GetColonne(p.pos) >= 1 && Chess_.board.GetRangee(p.pos) <= 5) { poss.Add(p.pos + 15); }
@@ -75,14 +74,14 @@ namespace Chess
             List<int> poss = new();
             for (int i = p.pos - 8; i >= 0; i -= 8)
             {
-                if (Chess_.CaseVide(i)) { poss.Add(i);}
+                if (Chess_.CaseVide(i)) { poss.Add(i); }
                 else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
-                else { break;}
+                else { break; }
             }
             for (int i = p.pos + 8; i <= 63; i += 8)
             {
                 if (Chess_.CaseVide(i)) { poss.Add(i); }
-                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; } 
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
                 else { break; }
             }
             for (int i = p.pos + 1; i <= 8 * Chess_.board.GetRangee(p.pos) + 7; i++)
@@ -97,7 +96,7 @@ namespace Chess
                 else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
                 else { break; }
             }
-            poss = FiltrerMoves(p,poss);
+            poss = FiltrerMoves(p, poss);
             return new(poss);
         }
 
@@ -180,8 +179,24 @@ namespace Chess
 
         public static Move King(Pieces p) // Il manque retirer les moves qui mettent le roi en Chech mate
         {
-            List<int> poss = new() { p.pos - 9, p.pos - 8, p.pos - 7, p.pos - 1, p.pos + 1, p.pos + 7, p.pos + 8, p.pos + 9};
-            poss = FiltrerMoves(p,poss);
+            List<int> poss = new() { p.pos - 9, p.pos - 8, p.pos - 7, p.pos - 1, p.pos + 1, p.pos + 7, p.pos + 8, p.pos + 9 };
+            /*for (int n = 0; n < poss.Count; n++)
+            {
+                for (int i = 0; i < Chess_._Pieces.Count; i++)
+                {
+                    if (Chess_.CaseEnnemie(Chess_.tour, poss[n]))
+                    {
+                        for (int k = 0; k < Chess_._Pieces[i].GetMoves().casesPossibles.Count; k++)
+                        {
+                            if (poss[n] == Chess_._Pieces[i].GetMoves().casesPossibles[k])
+                            {
+                                poss.RemoveAt(n);
+                            }
+                        }
+                    }
+                }
+            }*/
+            poss = FiltrerMoves(p, poss);
             return new(poss);
         }
 
@@ -220,12 +235,19 @@ namespace Chess
 
         public pieces nom { get; set; }
 
-        public Pieces(pieces n, int p, int player, Color couleur) // player 0 = white, player 1 = black
+        public Pieces(pieces n, int p, int player) // player 0 = white, player 1 = black
         {
             nom = n;
             pos = p;
             this.player = player;
-            this.couleur = couleur;
+            if (player == 0)
+            {
+                couleur = (Color)Colors.Black;
+            }
+            else
+            {
+                couleur = (Color)Colors.White;
+            }
             truePos.x = Chess_.board.grille[pos].pos.x;
             truePos.y = Chess_.board.grille[pos].pos.y;
             string arg = "WHITE";
@@ -236,24 +258,12 @@ namespace Chess
             image = "Images/" + nom.ToString() + "_" + arg + ".png";
         }
 
-        float Lerp(float firstFloat, float secondFloat, float by)
-        {
-            return firstFloat * (1 - by) + secondFloat * by;
-        }
-
-        Vector2D<float> Lerp(Vector2D<int> firstFloat, Vector2D<float> secondFloat, float by)
-        {
-            Lerp(firstFloat.x, secondFloat.x, by);
-            Lerp(firstFloat.y, secondFloat.y, by);
-            return new Vector2D<float>(Lerp(firstFloat.x, secondFloat.x, by), Lerp(firstFloat.y, secondFloat.y, by));
-        }
-
         public void Draw()
         {
             Vector2D<int> posF = Chess_.board.grille[pos].pos;
-            truePos = Lerp(posF, truePos, 0.9F);
+            truePos = Program.Lerp(posF, truePos, 0.9F);
             Vector2D<int> a = new((int)truePos.x, (int)truePos.y);
-            Program.DrawImage(image, /*Chess_.board.grille[pos].pos*/ a, Chess_.board.tileSize); // à refaire
+            Program.DrawImage(image, a, Chess_.board.tileSize);
         }
 
         public bool ClickSurPiece()

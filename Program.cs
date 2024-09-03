@@ -24,33 +24,33 @@ namespace Main
 
         public static Vector2D<Numeric> operator +(Vector2D<Numeric> a, Vector2D<Numeric> b)
         {
-            dynamic ax = a.x;
-            dynamic bx = b.x;
-            dynamic ay = a.y;
-            dynamic by = b.y;
+            dynamic? ax = a.x;
+            dynamic? bx = b.x;
+            dynamic? ay = a.y;
+            dynamic? by = b.y;
             return new Vector2D<Numeric>(ax + bx, ay + by);
         }
 
         public static Vector2D<Numeric> operator -(Vector2D<Numeric> a, Vector2D<Numeric> b)
         {
-            dynamic ax = a.x;
-            dynamic bx = b.x;
-            dynamic ay = a.y;
-            dynamic by = b.y;
+            dynamic? ax = a.x;
+            dynamic? bx = b.x;
+            dynamic? ay = a.y;
+            dynamic? by = b.y;
             return new Vector2D<Numeric>(ax - bx, ay - by);
         }
 
         public static Vector2D<Numeric> operator /(Vector2D<Numeric> a, int n)
         {
-            dynamic ax = a.x;
-            dynamic ay = a.y;
+            dynamic? ax = a.x;
+            dynamic? ay = a.y;
             return new Vector2D<Numeric>(ax / n, ay / n);
         }
 
         public static Vector2D<Numeric> operator *(Vector2D<Numeric> a, int n)
         {
-            dynamic ax = a.x;
-            dynamic ay = a.y;
+            dynamic? ax = a.x;
+            dynamic? ay = a.y;
             return new Vector2D<Numeric>(ax * n, ay * n);
         }
 
@@ -549,6 +549,18 @@ namespace Main
             }
         }
 
+        static float Lerp(float firstFloat, float secondFloat, float by)
+        {
+            return firstFloat * (1 - by) + secondFloat * by;
+        }
+
+        public static Vector2D<float> Lerp(Vector2D<int> finalPos, Vector2D<float> actualPos, float by)
+        {
+            Lerp(finalPos.x, actualPos.x, by);
+            Lerp(finalPos.y, actualPos.y, by);
+            return new Vector2D<float>(Lerp(finalPos.x, actualPos.x, by), Lerp(finalPos.y, actualPos.y, by));
+        }
+
         static double Rise(Vector2D<int> p1, Vector2D<int> p2)
         {
             return ((double)p1.y - p2.y) / ((double)p1.x - p2.x);
@@ -717,17 +729,6 @@ namespace Main
             return false;
         }
 
-        static string PopFront(string s)
-        {
-            string g = new string(s);
-            s = "";
-            for (int i = 13; i < g.Length; i++)
-            {
-                s += g[i];
-            }
-            return s;
-        }
-
         public static bool KeyPressed(SDL_Scancode code)
         {
             if (KeyHeld(code) && old_key_state[(int)code] == 0) //pour savoir si le bouton est pressé on regarde si il est tenu et si il l'était pas la frame d'avant avec old key state
@@ -766,6 +767,14 @@ namespace Main
         public static bool MouseLeftReleased()
         {
             bool l_cur = MouseLeftHeld();
+            bool l_old = ((old_m_state & SDL_BUTTON_LMASK) != 0);
+
+            return (!l_cur && l_old);
+        }
+
+        public static bool MouseRightReleased()
+        {
+            bool l_cur = MouseRightHeld();
             bool l_old = ((old_m_state & SDL_BUTTON_LMASK) != 0);
 
             return (!l_cur && l_old);

@@ -16,46 +16,43 @@ namespace Chess
 
         public static List<Pieces> _Pieces = new()
         {
-            new(pieces.PAWN, 8, 0, (Color)Colors.White),
-            new(pieces.PAWN, 9, 0, (Color)Colors.White),
-            new(pieces.PAWN, 10, 0, (Color)Colors.White),
-            new(pieces.PAWN, 11, 0, (Color)Colors.White),
-            new(pieces.PAWN, 12, 0, (Color)Colors.White),
-            new(pieces.PAWN, 13, 0, (Color)Colors.White),
-            new(pieces.PAWN, 14, 0, (Color)Colors.White),
-            new(pieces.PAWN, 15, 0, (Color)Colors.White),
+            new(pieces.PAWN, 8, 0),
+            new(pieces.PAWN, 9, 0),
+            new(pieces.PAWN, 10, 0),
+            new(pieces.PAWN, 11, 0),
+            new(pieces.PAWN, 12, 0),
+            new(pieces.PAWN, 13, 0),
+            new(pieces.PAWN, 14, 0),
+            new(pieces.PAWN, 15, 0),
 
-            new(pieces.ROOK, 0, 0, (Color)Colors.White),
-            new(pieces.KNIGHT, 1, 0, (Color)Colors.White),
-            new(pieces.BISHOP, 2, 0, (Color)Colors.White),
-            new(pieces.QUEEN, 3, 0, (Color)Colors.White),
-            new(pieces.KING, 4, 0, (Color)Colors.White),
-            new(pieces.BISHOP, 5, 0, (Color)Colors.White),
-            new(pieces.KNIGHT, 6, 0, (Color)Colors.White),
-            new(pieces.ROOK, 7, 0, (Color)Colors.White),
+            new(pieces.ROOK, 0, 0),
+            new(pieces.KNIGHT, 1, 0),
+            new(pieces.BISHOP, 2, 0),
+            new(pieces.QUEEN, 3, 0),
+            new(pieces.KING, 4, 0),
+            new(pieces.BISHOP, 5, 0),
+            new(pieces.KNIGHT, 6, 0),
+            new(pieces.ROOK, 7, 0),
 
 
 
-            new(pieces.PAWN, 48, 1, (Color)Colors.White),
-            new(pieces.PAWN, 49, 1, (Color)Colors.White),
-            new(pieces.PAWN, 50, 1, (Color)Colors.White),
-            new(pieces.PAWN, 51, 1, (Color)Colors.White),
-            new(pieces.PAWN, 52, 1, (Color)Colors.White),
-            new(pieces.PAWN, 53, 1, (Color)Colors.White),
-            new(pieces.PAWN, 54, 1, (Color)Colors.White),
-            new(pieces.PAWN, 55, 1, (Color)Colors.White),
+            new(pieces.PAWN, 48, 1),
+            new(pieces.PAWN, 49, 1),
+            new(pieces.PAWN, 50, 1),
+            new(pieces.PAWN, 51, 1),
+            new(pieces.PAWN, 52, 1),
+            new(pieces.PAWN, 53, 1),
+            new(pieces.PAWN, 54, 1),
+            new(pieces.PAWN, 55, 1),
 
-            new(pieces.ROOK, 56, 1, (Color)Colors.White),
-            new(pieces.KNIGHT, 57, 1, (Color)Colors.White),
-            new(pieces.BISHOP, 58, 1, (Color)Colors.White),
-            new(pieces.QUEEN, 59, 1, (Color)Colors.White),
-            new(pieces.KING, 60, 1, (Color)Colors.White),
-            new(pieces.BISHOP, 61, 1, (Color)Colors.White),
-            new(pieces.KNIGHT, 62, 1, (Color)Colors.White),
-            new(pieces.ROOK, 63, 1, (Color)Colors.White),
-
-            //new(pieces.PAWN, 17, 0, (Color)Colors.Black),
-            //new(pieces.KNIGHT, 45, 0, (Color)Colors.Black)
+            new(pieces.ROOK, 56, 1),
+            new(pieces.KNIGHT, 57, 1),
+            new(pieces.BISHOP, 58, 1),
+            new(pieces.QUEEN, 59, 1),
+            new(pieces.KING, 60, 1),
+            new(pieces.BISHOP, 61, 1),
+            new(pieces.KNIGHT, 62, 1),
+            new(pieces.ROOK, 63, 1)
         };
 
         public static bool CaseVide(int c)
@@ -100,8 +97,10 @@ namespace Chess
             }
             return cn;
         }
+
         public static Pieces? lastClicked = null;
         public static Move? lastMoves = null;
+
         static void ChoixPion()
         {
             if (Program.MouseLeftPressed())
@@ -141,25 +140,18 @@ namespace Chess
             }
             return;
         }
-
-        static Vector2D<int> posImage = new(100, 100);
-        static Pieces whitePawn = new(pieces.PAWN, 50, 1, (Color)Colors.White);
-        static Pieces BlackPawn = new(pieces.PAWN, 3, 0, (Color)Colors.Black);
+        static Sound music = new Sound("music.mp3");
         public static void Chess()
         {
             board.Display(true);
             board.Personalize(casesNoires(), couleur2);
-
+            ChoixPion();
             for (int i = 0; i < _Pieces.Count; i++)
             {
                 _Pieces[i].Draw();
             }
-            ChoixPion();
-            if (tour == 0)
-            {
-                Console.WriteLine("allo");
-            }
-            //BlackPawn.Draw();
+            music.Play();
+            //ChoixPion();
         }
 
         public static void ChangeTurn()
