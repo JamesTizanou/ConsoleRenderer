@@ -57,22 +57,15 @@ namespace Chess
 
         public static Move Knight(Pieces p)
         {
-            /*int m1 = 6;
-            int m2 = 10;
-            int m3 = 15;
-            int m4 = 17;*/
-            List<int> poss = new List<int>() { p.pos - 6, p.pos - 15, p.pos - 17, p.pos - 10, p.pos + 6, p.pos + 15, p.pos + 17, p.pos + 10 };
-            for (int i = 0; i < poss.Count; i++)
-            {
-                if (Math.Abs(Chess_.board.GetColonne(p.pos) - Chess_.board.GetColonne(poss[i])) == 2 || Math.Abs(Chess_.board.GetRangee(p.pos) - Chess_.board.GetRangee(poss[i])) == 2) // mauvais algorithme, c'est pour tester
-                {
-
-                }
-                else
-                {
-                    poss.RemoveAt(i);
-                }
-            }
+            List<int> poss = new List<int>();
+            if (Chess_.board.GetColonne(p.pos) >= 2 && Chess_.board.GetRangee(p.pos) >= 1){ poss.Add(p.pos - 10);}
+            if (Chess_.board.GetColonne(p.pos) >= 1 && Chess_.board.GetRangee(p.pos) >= 2) { poss.Add(p.pos - 17); }
+            if (Chess_.board.GetColonne(p.pos) >= 2 && Chess_.board.GetRangee(p.pos) <= 6) { poss.Add(p.pos + 6); }
+            if (Chess_.board.GetColonne(p.pos) >= 1 && Chess_.board.GetRangee(p.pos) <= 5) { poss.Add(p.pos + 15); }
+            if (Chess_.board.GetColonne(p.pos) <= 6 && Chess_.board.GetRangee(p.pos) <= 5) { poss.Add(p.pos + 17); }
+            if (Chess_.board.GetColonne(p.pos) <= 5 && Chess_.board.GetRangee(p.pos) <= 6) { poss.Add(p.pos + 10); }
+            if (Chess_.board.GetColonne(p.pos) <= 5 && Chess_.board.GetRangee(p.pos) >= 1) { poss.Add(p.pos - 6); }
+            if (Chess_.board.GetColonne(p.pos) <= 6 && Chess_.board.GetRangee(p.pos) >= 2) { poss.Add(p.pos - 15); }
             poss = FiltrerMoves(p, poss);
             return new(poss);
         }
