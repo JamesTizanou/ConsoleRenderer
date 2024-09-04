@@ -7,10 +7,10 @@ namespace Chess
 {
     class Chess_
     {
-        static int t = 75;
+        static int t = 100;
         static Colors couleur1 = Colors.White;
         static Colors couleur2 = Colors.Black;
-        public static Grid board = new Grid(new(100, 100), new(t, t), 8, 8, couleur1);
+        public static Grid board = new Grid(new(0, 0), new(t, t), 8, 8, couleur1);
         public static int tour = 1;
         static bool FirstExec = true;
 
@@ -151,7 +151,6 @@ namespace Chess
                 _Pieces[i].Draw();
             }
             music.Play();
-            //ChoixPion();
         }
 
         public static void ChangeTurn()

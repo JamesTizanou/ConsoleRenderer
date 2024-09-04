@@ -455,6 +455,7 @@ namespace Main
         static void Main()
         {
             Setup();
+            //SDL_RenderSetLogicalSize(renderer, 800, 800);
             while (running)
             {
                 PollEvents();

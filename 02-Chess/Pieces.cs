@@ -28,7 +28,7 @@ namespace Chess
             int ind = 0;
             List<int> possibilities = new();
             if (p.player == 0) { ind = 1; } else { ind = -1; }
-            if (p.firstMove && Chess_.CaseVide(p.pos + (Chess_.board.squaresPerColumn) * 2 * ind) && Chess_.CaseVide(p.pos + (Chess_.board.squaresPerColumn)))
+            if (p.firstMove && Chess_.CaseVide(p.pos + (Chess_.board.squaresPerColumn) * 2 * ind) && Chess_.CaseVide(p.pos + (Chess_.board.squaresPerColumn) * ind))
             {
                 possibilities.Add(p.pos + (Chess_.board.squaresPerColumn) * 2 * ind);
             }
@@ -263,7 +263,7 @@ namespace Chess
             Vector2D<int> posF = Chess_.board.grille[pos].pos;
             truePos = Program.Lerp(posF, truePos, 0.9F);
             Vector2D<int> a = new((int)truePos.x, (int)truePos.y);
-            Program.DrawImage(image, a, Chess_.board.tileSize);
+            Program.DrawImage(image, new(a.x + 5, a.y + 5), new(Chess_.board.tileSize.x - 10, Chess_.board.tileSize.y - 10));
         }
 
         public bool ClickSurPiece()
