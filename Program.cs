@@ -244,13 +244,41 @@ namespace Main
             file = "../../../Sounds/" + file;
             //pointeur vers le son loadé (idealement tu le garde dans une liste pour eviter de le loader a chaque frame lol)
             this.file = file;
-            sonData = SDL_mixer.Mix_LoadWAV(file);
+            if (file[file.Length - 1] == 'v')
+            {
+                sonData = SDL_mixer.Mix_LoadWAV(file);
+            }
+            else
+            {
+                sonData = SDL_mixer.Mix_LoadMUS(file);
+            }
+            //sonData = SDL_mixer.Mix_LoadWAV(file);
             Console.WriteLine(SDL_mixer.Mix_GetError());
         }
 
         public void Play()
         {
-            SDL_mixer.Mix_PlayChannel(-1, sonData, 0);
+            if (file[file.Length - 1] == 'v')
+            {
+                SDL_mixer.Mix_PlayChannel(-1, sonData, 1);
+            }
+            else
+            {
+                SDL_mixer.Mix_PlayMusic(sonData, -1);
+            }
+
+        }
+
+        public void Stop()
+        {
+            if (file[file.Length - 1] == 'v')
+            {
+                SDL_mixer.Mix_HaltChannel(-1);
+            }
+            else
+            {
+                SDL_mixer.Mix_HaltMusic();
+            }
         }
     }
 
@@ -454,6 +482,8 @@ namespace Main
 
         static void Main()
         {
+            SDL_LogSetAllPriority(SDL_LogPriority.SDL_LOG_PRIORITY_WARN);
+            SDL_LogSetPriority((int)SDL_LogCategory.SDL_LOG_CATEGORY_ERROR, SDL_LogPriority.SDL_LOG_PRIORITY_DEBUG);
             Setup();
             //SDL_RenderSetLogicalSize(renderer, 800, 800);
             while (running)
@@ -660,7 +690,7 @@ namespace Main
             DrawFlatTriangle(bot, mid.y, mid.x, (int)flat_x);
         }
 
-        public static void DrawText(string text, Vector2D<int> pos, int size = 3000, string fontPath = "../../../Fonts/Makeup.otf")
+        public static void DrawText(string text, Vector2D<int> pos, int size = 30, string fontPath = "../../../Fonts/Makeup.otf")
         {
             Color coul = Color.GetPencil();
             SDL_Color c = new SDL_Color();

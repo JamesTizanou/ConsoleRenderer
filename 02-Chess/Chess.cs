@@ -1,4 +1,6 @@
 ﻿using Main;
+using static Main.Color;
+using static Main.Program;
 
 // TODO:
 // Fix l'algorithme du pawn pour manger, car de la façon dont il est fait maintenant, un pawn pourrait manger une pièce qui 'est pas directement à sa diagonale 
@@ -12,7 +14,7 @@ namespace Chess
         static Colors couleur2 = Colors.Black;
         public static Grid board = new Grid(new(0, 0), new(t, t), 8, 8, couleur1);
         public static int tour = 1;
-        static bool FirstExec = true;
+        public static bool gameFinished = false;
 
         public static List<Pieces> _Pieces = new()
         {
@@ -103,7 +105,7 @@ namespace Chess
 
         static void ChoixPion()
         {
-            if (Program.MouseLeftPressed())
+            if (MouseLeftPressed())
             {
                 bool found = false;
                 if (lastMoves != null && lastClicked != null)
@@ -140,17 +142,40 @@ namespace Chess
             }
             return;
         }
+        static bool init = true;
         static Sound music = new Sound("music.mp3");
         public static void Chess()
         {
-            board.Display(true);
-            board.Personalize(casesNoires(), couleur2);
-            ChoixPion();
-            for (int i = 0; i < _Pieces.Count; i++)
+            if (init)
             {
-                _Pieces[i].Draw();
+                music.Play();
+                init = false;
             }
-            music.Play();
+
+            if (!gameFinished)
+            {
+                board.Display(true);
+                board.Personalize(casesNoires(), couleur2);
+                ChoixPion();
+                for (int i = 0; i < _Pieces.Count; i++)
+                {
+                    _Pieces[i].Draw();
+                }
+            }
+            else
+            {
+                string txt = "";
+                if (tour == 0)
+                {
+                    txt = "Noirs";
+                }
+                else
+                {
+                    txt = "Blancs";
+                }
+                Pencil(Colors.White);
+                DrawText("Les " + txt + " ont gagné", new(200, 200));
+            }
         }
 
         public static void ChangeTurn()

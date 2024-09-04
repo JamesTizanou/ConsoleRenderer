@@ -177,25 +177,31 @@ namespace Chess
             return new(poss);
         }
 
-        public static Move King(Pieces p) // Il manque retirer les moves qui mettent le roi en Chech mate
+        public static Move King(Pieces p) // Il manque retirer les moves qui mettent le roi en Checkmate
         {
             List<int> poss = new() { p.pos - 9, p.pos - 8, p.pos - 7, p.pos - 1, p.pos + 1, p.pos + 7, p.pos + 8, p.pos + 9 };
-            /*for (int n = 0; n < poss.Count; n++)
+
+            // CODE POUR CASTLE
+
+            List<int> enemi = new();
+            for (int i = 0; i < Chess_._Pieces.Count; i++)
             {
-                for (int i = 0; i < Chess_._Pieces.Count; i++)
+                if (Chess_._Pieces[i].player != Chess_.tour && Chess_._Pieces[i].nom != pieces.KING) // Évite que roi aille à une pos où il se fera chechmate, sauf si cette pos appartient est celle de l'autre roi
                 {
-                    if (Chess_.CaseEnnemie(Chess_.tour, poss[n]))
+                    enemi.AddRange(Chess_._Pieces[i].GetMoves().casesPossibles);
+                }
+            }
+            for (int n = 0; n < poss.Count; n++)
+            {
+                for (int i = 0; i < enemi.Count; i++)
+                {
+                    if (poss[n] == enemi[i])
                     {
-                        for (int k = 0; k < Chess_._Pieces[i].GetMoves().casesPossibles.Count; k++)
-                        {
-                            if (poss[n] == Chess_._Pieces[i].GetMoves().casesPossibles[k])
-                            {
-                                poss.RemoveAt(n);
-                            }
-                        }
+                        poss.RemoveAt(n);
+                        n--;
                     }
                 }
-            }*/
+            }
             poss = FiltrerMoves(p, poss);
             return new(poss);
         }
@@ -318,6 +324,11 @@ namespace Chess
                 {
                     if (Chess_._Pieces[i].pos == pos)
                     {
+                        if (Chess_._Pieces[i].nom == pieces.KING)
+                        {
+                            Chess_.ChangeTurn();
+                            Chess_.gameFinished = true;
+                        }
                         Chess_._Pieces.RemoveAt(i);
                     }
                 }
