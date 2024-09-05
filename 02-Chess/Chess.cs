@@ -1,9 +1,10 @@
 ﻿using Main;
+using System.Collections.Specialized;
 using static Main.Color;
 using static Main.Program;
 
 // TODO:
-// Fix l'algorithme du pawn pour manger, car de la façon dont il est fait maintenant, un pawn pourrait manger une pièce qui 'est pas directement à sa diagonale 
+// Fix le déplacement du rook et du bishop (cela impactera également la reine)
 
 namespace Chess
 {
@@ -82,10 +83,10 @@ namespace Chess
             {
                 if (c == _Pieces[i].pos && tour != j)
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
 
 
@@ -151,6 +152,38 @@ namespace Chess
         }
         static bool init = true;
         static Sound music = new Sound("music.mp3");
+
+        static bool isCheckmated()
+        {
+            List<int> c = new();
+            if (KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
+            {
+                Console.WriteLine("Allo"); 
+            }
+            for (int i = 0; i < _Pieces.Count; i++)
+            {
+                if (_Pieces[i].player != tour && _Pieces[i].nom != pieces.KING)
+                {
+                    c.AddRange(_Pieces[i].GetMoves().casesPossibles);
+                }
+            }
+            c = c.Distinct().ToList();
+            for (int i = 0; i < _Pieces.Count; i++)
+            {
+                if (_Pieces[i].player == tour && _Pieces[i].nom == pieces.KING)
+                {
+                    for (int n = 0; n < c.Count; n++)
+                    {
+                        if (_Pieces[i].pos == c[n])
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         public static void Chess()
         {
             if (init)
@@ -167,6 +200,16 @@ namespace Chess
                 for (int i = 0; i < _Pieces.Count; i++)
                 {
                     _Pieces[i].Draw();
+                }
+                if (isCheckmated())
+                {
+                    for (int i = 0; i < _Pieces.Count; i++)
+                    {
+                        if (_Pieces[i].nom == pieces.KING && _Pieces[i].player == tour)
+                        {
+                            board.Personalize(new int[] { _Pieces[i].pos }, Colors.Yellow);
+                        }
+                    }
                 }
             }
             else
