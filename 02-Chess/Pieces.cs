@@ -119,12 +119,16 @@ namespace Chess
 
         public static List<int> UpLeft(Pieces p)
         {
+            if (Program.KeyHeld(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
+            {
+                int h = 1;
+            }
             List<int> poss = new();
             for (int i = p.pos - 9; i < 1000; i -= 9)
             {
                 if (Chess_.CaseVide(i) && i % 8 == 0) { poss.Add(i); break; }
                 if (Chess_.CaseVide(i) && i >= 0) { poss.Add(i); }
-                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else if (!Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
                 else { break; }
             }
             return poss;
@@ -197,7 +201,6 @@ namespace Chess
                 {
                     if (poss[n] == enemi[i])
                     {
-                        Chess_.board.Personalize(new int[] { p.pos }, Colors.Yellow);
                         poss.RemoveAt(n);
                         n--;
                     }

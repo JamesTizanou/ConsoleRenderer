@@ -4,7 +4,7 @@ using static Main.Color;
 using static Main.Program;
 
 // TODO:
-// Fix le déplacement du rook et du bishop (cela impactera également la reine)
+// A fix: La fonction CaseEnnemi fonctionne différemment de quand je check pour un checkmate que quand mon bishop check pour se déplacer 
 
 namespace Chess
 {
