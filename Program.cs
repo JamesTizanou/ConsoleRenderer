@@ -452,6 +452,45 @@ namespace Main
             return y * squaresPerColumn + x;
         }
     }
+
+    class Menu
+    {
+        public List<MenuItem> Actions { get; set; } = new();
+        public void Show()
+        {
+            for (int i = 0; i < Actions.Count; i++)
+            {
+                Actions[i].Display();
+            }
+        }
+    }
+
+    class MenuItem
+    {
+        public string Name { get; set; }
+
+        public Rect box;
+        enum Type
+        {
+            BOX,
+            CHECKBOX
+        }
+
+        Type type;
+        Func<int> action; // revenir sur ceci
+
+        public MenuItem(string name, Rect b, Func<int> action)
+        {
+            Name = name;
+            box = b;
+            this.action = action;
+        }
+
+        public void Display()
+        {
+
+        }
+    }
     #endregion
 
     #region couleurs

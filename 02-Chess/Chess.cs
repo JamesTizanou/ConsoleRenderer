@@ -7,6 +7,13 @@ using static Main.Program;
 
 namespace Chess
 {
+    public enum ScreenState
+    {
+        GAME,
+        ENDGAME,
+        STARTGAME,
+        PARAMS
+    }
     class Chess_
     {
         static int t = 100;

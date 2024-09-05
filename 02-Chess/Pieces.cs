@@ -197,6 +197,7 @@ namespace Chess
                 {
                     if (poss[n] == enemi[i])
                     {
+                        Chess_.board.Personalize(new int[] { p.pos }, Colors.Yellow);
                         poss.RemoveAt(n);
                         n--;
                     }
