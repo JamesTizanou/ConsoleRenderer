@@ -190,7 +190,7 @@ namespace Chess
             List<int> enemi = new();
             for (int i = 0; i < Chess_._Pieces.Count; i++)
             {
-                if (Chess_._Pieces[i].player != Chess_.tour && Chess_._Pieces[i].nom != pieces.KING) // Évite que roi aille à une pos où il se fera chechmate, sauf si cette pos appartient est celle de l'autre roi
+                if (Chess_._Pieces[i].player != Chess_.tour && Chess_._Pieces[i].nom != pieces.KING) // Évite que roi aille à une pos où il se fera checkmate, sauf si l'autre roi peut aller à cette pos
                 {
                     enemi.AddRange(Chess_._Pieces[i].GetMoves().casesPossibles);
                 }
@@ -202,7 +202,10 @@ namespace Chess
                     if (poss[n] == enemi[i])
                     {
                         poss.RemoveAt(n);
-                        n--;
+                        if (n > 0)
+                        {
+                            n--;
+                        }
                     }
                 }
             }

@@ -1,5 +1,4 @@
 ﻿using Main;
-using System.Collections.Specialized;
 using static Main.Color;
 using static Main.Program;
 
@@ -83,10 +82,10 @@ namespace Chess
             {
                 if (c == _Pieces[i].pos && tour != j)
                 {
-                    return true;
+                    return false; // !!! À revoir
                 }
             }
-            return false;
+            return true;
         }
 
 
@@ -158,7 +157,7 @@ namespace Chess
             List<int> c = new();
             if (KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
             {
-                Console.WriteLine("Allo"); 
+                Console.WriteLine("Allo");
             }
             for (int i = 0; i < _Pieces.Count; i++)
             {
