@@ -76,16 +76,17 @@ namespace Chess
             return true;
         }
 
+        // Dis si la case rentrée en argument appartient au joueur en argument
         public static bool CaseEnnemie(int j, int c)
         {
             for (int i = 0; i < _Pieces.Count; i++)
             {
                 if (c == _Pieces[i].pos && tour != j)
                 {
-                    return false; // !!! À revoir
+                    return true; // !!! À revoir
                 }
             }
-            return true;
+            return false;
         }
 
 
