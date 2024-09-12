@@ -1,4 +1,5 @@
 ﻿using Main;
+using System.Reflection.Metadata.Ecma335;
 using static Main.Color;
 using static Main.Program;
 
@@ -66,14 +67,15 @@ namespace Chess
 
         public static bool CaseVide(int c)
         {
-            for (int i = 0; i < _Pieces.Count; i++)
-            {
-                if (c == _Pieces[i].pos)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return !_Pieces.Exists((p) => { return p.pos == c; });
+            //for (int i = 0; i < _Pieces.Count; i++)
+            //{
+            //    if (c == _Pieces[i].pos)
+            //    {
+            //        return false;
+            //    }
+            //}
+            //return true;
         }
 
         // Dis si la case rentrée en argument appartient au joueur en argument
@@ -81,7 +83,7 @@ namespace Chess
         {
             for (int i = 0; i < _Pieces.Count; i++)
             {
-                if (c == _Pieces[i].pos && tour != j)
+                if (c == _Pieces[i].pos && _Pieces[i].player != j)
                 {
                     return true; // !!! À revoir
                 }
@@ -151,7 +153,7 @@ namespace Chess
             return;
         }
         static bool init = true;
-        static Sound music = new Sound("music.mp3");
+        //static Sound music = new Sound("music.mp3");
 
         static bool isCheckmated()
         {
@@ -160,6 +162,7 @@ namespace Chess
             {
                 Console.WriteLine("Allo");
             }
+            //c.AddRange(_Pieces.Where((p) => p.player != tour && p.nom != pieces.KING).Select((p) => p.GetMoves().casesPossibles ).ToList()
             for (int i = 0; i < _Pieces.Count; i++)
             {
                 if (_Pieces[i].player != tour && _Pieces[i].nom != pieces.KING)
@@ -188,7 +191,7 @@ namespace Chess
         {
             if (init)
             {
-                music.Play();
+               //music.Play();
                 init = false;
             }
 

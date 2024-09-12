@@ -128,7 +128,7 @@ namespace Chess
             {
                 if (Chess_.CaseVide(i) && i % 8 == 0) { poss.Add(i); break; }
                 if (Chess_.CaseVide(i) && i >= 0) { poss.Add(i); }
-                else if (!Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
+                else if (Chess_.CaseEnnemie(p.player, i)) { poss.Add(i); break; }
                 else { break; }
             }
             return poss;
