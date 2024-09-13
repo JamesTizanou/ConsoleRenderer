@@ -1,5 +1,4 @@
 ﻿using Main;
-using System.Reflection.Metadata.Ecma335;
 using static Main.Color;
 using static Main.Program;
 
@@ -162,7 +161,7 @@ namespace Chess
             {
                 Console.WriteLine("Allo");
             }
-            //c.AddRange(_Pieces.Where((p) => p.player != tour && p.nom != pieces.KING).Select((p) => p.GetMoves().casesPossibles ).ToList()
+            //c.AddRange(_Pieces.Where((p) => p.player != tour && p.nom != pieces.KING).Select((p) => (List<int>)p.GetMoves().casesPossibles.ToList()))
             for (int i = 0; i < _Pieces.Count; i++)
             {
                 if (_Pieces[i].player != tour && _Pieces[i].nom != pieces.KING)
@@ -191,7 +190,7 @@ namespace Chess
         {
             if (init)
             {
-               //music.Play();
+                //music.Play();
                 init = false;
             }
 
