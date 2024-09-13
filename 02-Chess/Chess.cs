@@ -3,7 +3,7 @@ using static Main.Color;
 using static Main.Program;
 
 // TODO:
-// A fix: La fonction CaseEnnemi fonctionne différemment de quand je check pour un checkmate que quand mon bishop check pour se déplacer 
+// A fix: Il faut vérifier que le déplacement du roi ne le mette pas en checkmate
 
 namespace Chess
 {
