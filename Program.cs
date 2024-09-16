@@ -153,6 +153,10 @@ namespace Main
             {
                 return new Color(135, 206, 235, 255);
             }
+            else if (Colors.Lime == coul)
+            {
+                return new(191, 255, 0);
+            }
             throw new Exception("Couleur introuvale");
         }
 
@@ -178,50 +182,8 @@ namespace Main
 
         public static void Pencil(Colors coul)
         {
-            if (Colors.Red == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 255, 0, 0, 255);
-            }
-            else if (Colors.Blue == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 0, 0, 255, 255);
-            }
-            else if (Colors.Green == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 0, 255, 0, 255);
-            }
-            else if (Colors.Yellow == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 255, 255, 0, 255);
-            }
-            else if (Colors.White == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 255, 255, 255, 255);
-            }
-            else if (Colors.Black == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 0, 0, 0, 255);
-            }
-            else if (Colors.Orange == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 255, 165, 0, 255);
-            }
-            else if (Colors.Pink == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 255, 192, 203, 255);
-            }
-            else if (Colors.Purple == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 160, 32, 240, 255);
-            }
-            else if (Colors.Cyan == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 0, 255, 255, 255);
-            }
-            else if (Colors.SkyBlue == coul)
-            {
-                SDL_SetRenderDrawColor(Program.renderer, 135, 206, 235, 255);
-            }
+            Color c = (Color)coul;
+            SDL_SetRenderDrawColor(Program.renderer, c.r, c.g, c.b, c.a);
         }
 
 
@@ -282,7 +244,7 @@ namespace Main
         }
     }
 
-    class Text
+    /*class Text
     {
         IntPtr font;
         IntPtr textTexture;
@@ -350,7 +312,7 @@ namespace Main
             textSurface = SDL_ttf.TTF_RenderText_Solid(font, text, col);
             textTexture = SDL_CreateTextureFromSurface(Program.renderer, textSurface);
         }
-    }
+    }*/
 
     class Tile
     {
@@ -456,6 +418,11 @@ namespace Main
     class Menu
     {
         public List<MenuItem> Actions { get; set; } = new();
+        string? Nom { get; set; }
+        public Menu(string nom, List<MenuItem> m)
+        {
+           // Actions.
+        }
         public void Show()
         {
             for (int i = 0; i < Actions.Count; i++)
@@ -465,30 +432,54 @@ namespace Main
         }
     }
 
+    /*public enum MenuItemBox
+    {
+        Circle,
+        Square,
+        Rectangle
+    }*/
+
     class MenuItem
     {
         public string Name { get; set; }
 
         public Rect box;
-        enum Type
-        {
-            BOX,
-            CHECKBOX
-        }
 
-        Type type;
-        Func<int> action; // revenir sur ceci
+        bool isInvoked = false;
 
-        public MenuItem(string name, Rect b, Func<int> action)
+        Action action; // revenir sur ceci
+
+        public MenuItem(string name, Rect b, Action action)
         {
             Name = name;
             box = b;
             this.action = action;
         }
 
-        public void Display()
+        public void Display(Colors color = Colors.White, bool hover = true, Colors hoverColor = Colors.Lime, Colors hoverTextColor = Colors.Black)
         {
-
+            if (!isInvoked)
+            {
+                if (Program.PointInRect(Program.MousePosition(), box) && hover)
+                {
+                    Color.Pencil(hoverColor);
+                    Program.DrawFullRect(box);
+                    Color.Pencil(hoverTextColor);
+                    Program.DrawText(Name, new(box.pos.x + 10, box.pos.y + 10));
+                }
+                else
+                {
+                    Color.Pencil(color);
+                    Program.DrawRect(box);
+                    Program.DrawText(Name, new(box.pos.x + 10, box.pos.y + 10));
+                }
+                if (Program.MouseLeftPressed())
+                {
+                    isInvoked = true;
+                }
+                return;
+            }
+            action.Invoke();
         }
     }
     #endregion
@@ -506,7 +497,8 @@ namespace Main
         Cyan,
         Purple,
         Pink,
-        SkyBlue
+        SkyBlue,
+        Lime
     }
     #endregion
 
@@ -863,6 +855,8 @@ namespace Main
         /// <summary>
         /// Renders to the window.
         /// </summary> 
+        //static Menu
+        static MenuItem c = new("Chess", new Rect(100, 100, 100, 100), Chess_.Chess);
         static void Render()
         {
             Color.Pencil(Colors.Black);
@@ -871,9 +865,11 @@ namespace Main
 
             // update the key state at every frame a la fin
 
+            c.Display();
 
             //Ludo_.Ludo();
-            Chess_.Chess();
+            
+            //Chess_.Chess();
 
             UpdateKeyInfo();
 
