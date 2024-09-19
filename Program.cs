@@ -196,6 +196,11 @@ namespace Main
         }
     }
 
+    class SoundManager
+    {
+
+    }
+
     class Sound
     {
         public string? file;
@@ -216,6 +221,11 @@ namespace Main
             }
             //sonData = SDL_mixer.Mix_LoadWAV(file);
             Console.WriteLine(SDL_mixer.Mix_GetError());
+        }
+
+        ~Sound()
+        {
+            SDL_mixer.Mix_FreeChunk(sonData);
         }
 
         public void Play()

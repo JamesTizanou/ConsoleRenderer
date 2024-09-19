@@ -191,6 +191,9 @@ namespace Chess
             if (init)
             {
                 music.Play();
+
+
+
                 init = false;
             }
 
