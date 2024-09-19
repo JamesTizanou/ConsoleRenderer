@@ -152,7 +152,7 @@ namespace Chess
             return;
         }
         static bool init = true;
-        //static Sound music = new Sound("music.mp3");
+        static Sound music = new Sound("music.mp3");
 
         static bool isCheckmated()
         {
@@ -190,7 +190,7 @@ namespace Chess
         {
             if (init)
             {
-                //music.Play();
+                music.Play();
                 init = false;
             }
 
