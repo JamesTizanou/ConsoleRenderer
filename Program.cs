@@ -431,7 +431,7 @@ namespace Main
         string? Nom { get; set; }
         public Menu(string nom, List<MenuItem> m)
         {
-           // Actions.
+            // Actions.
         }
         public void Show()
         {
@@ -492,6 +492,75 @@ namespace Main
             action.Invoke();
         }
     }
+
+    class Time
+    {
+        public static uint GetTime()
+        {
+            return SDL_GetTicks();
+        }
+    }
+
+    public enum TempsFormat
+    {
+        Secondes,
+        Minutes,
+        Heures,
+        MS,
+        HM,
+        HS,
+        HMS
+    }
+
+    class Minuteur
+    {
+        public uint Debut;
+        public uint Duree;
+
+        public Minuteur(uint duree)
+        {
+            Debut = SDL_GetTicks();
+            Duree = duree;
+        }
+
+        public bool isFinished()
+        {
+            return Duree + Debut > SDL_GetTicks();
+        }
+
+        public uint TimeLeft()
+        {
+            if (SDL_GetTicks() < Duree)
+            {
+                return Duree - (SDL_GetTicks() - Debut);
+            }
+            Console.WriteLine($"Le minuteur actuel est terminé");
+            return 0;
+        }
+
+        public uint TimeNow()
+        {
+            if (Debut + (SDL_GetTicks() - Debut) < Duree)
+            {
+                return SDL_GetTicks() - Debut;
+            }
+            Console.WriteLine($"Le minuteur actuel est terminé");
+            return 0;
+        }
+
+        public string Ecrire(TempsFormat format = TempsFormat.MS)
+        {
+            uint tempsRestant = TimeLeft();
+            switch (format)
+            {
+                case TempsFormat.MS:
+                    return $"{tempsRestant / 60000}:{tempsRestant / 1000}";
+            }
+            return "Non implementé!";
+        }
+    }
+
+
     #endregion
 
     #region couleurs
@@ -878,7 +947,7 @@ namespace Main
             c.Display();
 
             //Ludo_.Ludo();
-            
+
             //Chess_.Chess();
 
             UpdateKeyInfo();
