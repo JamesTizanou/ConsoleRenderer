@@ -1,5 +1,6 @@
 ﻿using Chess;
 using SDL2;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using static SDL2.SDL;
 
@@ -495,68 +496,114 @@ namespace Main
 
     class Time
     {
-        public static uint GetTime()
+        public uint Temps { get; set; }
+        public TempsFormat Format { init; get; }
+
+        public Time(uint temps, TempsFormat format = TempsFormat.MilliSecondes)
         {
-            return SDL_GetTicks();
+            Temps = temps;
+            if (format == TempsFormat.MilliSecondes || format == TempsFormat.Secondes || format == TempsFormat.Minutes || format == TempsFormat.Heures)
+            {
+                Format = format;
+            }
+        }
+
+        // Retourne le temps écoulé depuis le début de l'exécution du programme dans le format demandé
+        public static uint GetTime(TempsFormat format = TempsFormat.Secondes)
+        {
+            switch(format)
+            {
+                case TempsFormat.MilliSecondes:
+                    return SDL_GetTicks();
+                case TempsFormat.Secondes:
+                    return SDL_GetTicks() / 1000;
+                case TempsFormat.Minutes:
+                    return SDL_GetTicks() / 60000;
+                case TempsFormat.Heures:
+                    return SDL_GetTicks() / (60000 * 60);
+            }
+            throw new NotImplementedException("Le format ne peut être que des millisecondes, des secondes, des minutes ou des heures");
         }
     }
 
     public enum TempsFormat
     {
-        Secondes,
-        Minutes,
-        Heures,
-        MS,
-        HM,
-        HS,
-        HMS
+        MilliSecondes, // A
+        Secondes, // S
+        Minutes, // M
+        Heures, // H
+        SA, // secondes et millisecondes
+        MS, // minutes et secondes
+        MSA, // Minutes, secondes et millisecondes
+        HM, // Heures et minutes
+        HS, // Heures et secondes
+        HMS, // Heures et minutes et secondes
+        HMSA, // Heures et minutes et secondes et millisecondes
     }
 
     class Minuteur
     {
-        public uint Debut;
-        public uint Duree;
+        public Time Debut;
+        public Time Duree;
 
         public Minuteur(uint duree)
         {
-            Debut = SDL_GetTicks();
-            Duree = duree;
+            Debut = new Time(SDL_GetTicks());
+            Duree = new Time(duree);
         }
 
         public bool isFinished()
         {
-            return Duree + Debut > SDL_GetTicks();
+            return Duree.Temps + Debut.Temps > SDL_GetTicks();
         }
 
         public uint TimeLeft()
         {
-            if (SDL_GetTicks() < Duree)
+            if (SDL_GetTicks() < Duree.Temps)
             {
-                return Duree - (SDL_GetTicks() - Debut);
+                return Duree.Temps - (SDL_GetTicks() - Debut.Temps);
             }
-            Console.WriteLine($"Le minuteur actuel est terminé");
+            Console.WriteLine($"Le minuteur de {Duree.Temps} {Duree.Format.ToString().ToLower()} est terminé");
             return 0;
         }
 
         public uint TimeNow()
         {
-            if (Debut + (SDL_GetTicks() - Debut) < Duree)
+            if (Debut.Temps + (SDL_GetTicks() - Debut.Temps) < Duree.Temps)
             {
-                return SDL_GetTicks() - Debut;
+                return SDL_GetTicks() - Debut.Temps;
             }
             Console.WriteLine($"Le minuteur actuel est terminé");
             return 0;
         }
 
-        public string Ecrire(TempsFormat format = TempsFormat.MS)
+        public void Ecrire(Vector2D<int> pos,string format = "mm:ss")
         {
-            uint tempsRestant = TimeLeft();
-            switch (format)
+            string texte = "";
+            DateTime tempsRestant = new DateTime(TimeLeft());
+            texte = tempsRestant.ToString(format,CultureInfo.InvariantCulture); 
+            /*switch (format)
             {
-                case TempsFormat.MS:
-                    return $"{tempsRestant / 60000}:{tempsRestant / 1000}";
-            }
-            return "Non implementé!";
+                case TempsFormat.MilliSecondes:
+                    texte = $"{tempsRestant}";
+                    break;
+                case TempsFormat.Secondes:
+                    texte = $"{tempsRestant / 1000}";
+                    break;
+                case TempsFormat.Minutes:
+                    texte = $"{tempsRestant / 60000}";
+                    break;
+                case TempsFormat.Heures:
+                    texte = $"{tempsRestant / 3600000}";
+                    break;
+                case TempsFormat.SA:
+                    texte = $"{tempsRestant / 1000}:{tempsRestant - (tempsRestant / 1000) * 1000}";
+                    break;
+                case TempsFormat.MSA:
+                    //texte = $"{tempsRestant / 60000}:{tempsRestant % 1000}:{tempsRestant - (tempsRestant / 1000) * 1000}";
+                    break;
+                    Program.DrawText(texte,pos);
+            }*/
         }
     }
 
@@ -827,6 +874,8 @@ namespace Main
             src.y = 0;
             src.w = 100;
             src.h = 100;
+            SDL_FreeSurface(textSurface);
+            SDL_ttf.TTF_CloseFont(font);
             SDL_QueryTexture(textTexture, out f, out g, out src.w, out src.h);
             SDL_QueryTexture(textTexture, out f, out g, out dest.w, out dest.h);
             SDL_RenderCopy(renderer, textTexture, ref src, ref dest);

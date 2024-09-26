@@ -186,20 +186,19 @@ namespace Chess
             return false;
         }
 
+        public static Minuteur min = new Minuteur(100000);
         public static void Chess()
         {
             if (init)
             {
                 music.Play();
-
-
-
                 init = false;
             }
-
+            Pencil(Colors.White);
+            min.Ecrire(new(50,50));
             if (!gameFinished)
             {
-                board.Display(true);
+                /*board.Display(true);
                 board.Personalize(casesNoires(), couleur2);
                 ChoixPion();
                 for (int i = 0; i < _Pieces.Count; i++)
@@ -215,7 +214,7 @@ namespace Chess
                             board.Personalize(new int[] { _Pieces[i].pos }, Colors.Yellow);
                         }
                     }
-                }
+                }*/
             }
             else
             {
