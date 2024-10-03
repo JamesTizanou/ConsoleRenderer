@@ -1,8 +1,11 @@
 ﻿using Chess;
 using Ludo;
 using SDL2;
+using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Xml.Linq;
 using static SDL2.SDL;
 
 /*
@@ -326,174 +329,7 @@ namespace Main
         }
     }*/
 
-    class Tile
-    {
-        public int numero;
-        public Vector2D<int> pos;
-        public Vector2D<int> size;
-        public Colors color;
-        public Tile(Vector2D<int> pos, Vector2D<int> size, int numero, Colors col = Colors.Yellow)
-        {
-            this.size = size;
-            this.pos = pos;
-            this.numero = numero;
-            color = col;
-        }
-
-        public void Light()
-        {
-            Color act = Color.GetPencil();
-            Color.Pencil(color);
-            Program.DrawFullRect(new Rect(pos.x, pos.y, size.x, size.y));
-            Color.Pencil(Colors.Black);
-            Program.DrawRect(new Rect(pos.x, pos.y, size.x, size.y));
-            Color.Pencil(act);
-        }
-    }
-
-    class Grid
-    {
-        public Vector2D<int> pos;
-        public int squaresPerColumn;
-        public int squaresPerRow;
-        public Vector2D<int> tileSize;
-        public List<Tile> grille = new List<Tile>();
-
-        public Grid(Vector2D<int> pos, Vector2D<int> tailleDUnTile, int spc, int spr, Colors col = Colors.Yellow)
-        {
-            squaresPerColumn = spc;
-            squaresPerRow = spr;
-            tileSize = tailleDUnTile;
-            this.pos = pos;
-            int i = 0;
-            int x = pos.x;
-            int y = pos.y;
-            while (grille.Count < squaresPerColumn * squaresPerRow)
-            {
-                if (i % squaresPerColumn == 0 && i != 0)
-                {
-                    x = pos.x;
-                    i = 0;
-                    y += tailleDUnTile.y;
-                }
-                Vector2D<int> p = new Vector2D<int>(x + tailleDUnTile.x * i, y);
-                grille.Add(new Tile(p, tailleDUnTile, grille.Count, col));
-                i++;
-            }
-        }
-
-        public void Display(bool drawContour = false)
-        {
-            for (int i = 0; i < grille.Count; i++)
-            {
-                grille[i].Light();
-            }
-            if (drawContour)
-            {
-                Color.Pencil(Colors.White);
-                Program.DrawRect(new(pos, new(tileSize.x * squaresPerColumn, tileSize.y * squaresPerRow)));
-            }
-        }
-
-        public void Personalize(int[] indx, Colors coul)
-        {
-            for (int i = 0; i < indx.Length; i++)
-            {
-                grille[indx[i]].color = coul;
-            }
-        }
-
-        public void Personalize(List<int> indx, Colors coul)
-        {
-            for (int i = 0; i < indx.Count; i++)
-            {
-                grille[indx[i]].color = coul;
-            }
-        }
-
-        public int GetRangee(int nb)
-        {
-            return nb / squaresPerColumn;
-        }
-
-        public int GetColonne(int nb)
-        {
-            return nb % squaresPerColumn;
-        }
-
-        public int GetCoordinates(int x, int y)
-        {
-            return y * squaresPerColumn + x;
-        }
-    }
-
-    class Menu
-    {
-        public List<MenuItem> Actions { get; set; } = new();
-        string? Nom { get; set; }
-        public Menu(string nom, List<MenuItem> m)
-        {
-            // Actions.
-        }
-        public void Show()
-        {
-            for (int i = 0; i < Actions.Count; i++)
-            {
-                Actions[i].Display();
-            }
-        }
-    }
-
-    /*public enum MenuItemBox
-    {
-        Circle,
-        Square,
-        Rectangle
-    }*/
-
-    class MenuItem
-    {
-        public string Name { get; set; }
-
-        public Rect box;
-
-        bool isInvoked = false;
-
-        Action action; // revenir sur ceci
-
-        public MenuItem(string name, Rect b, Action action)
-        {
-            Name = name;
-            box = b;
-            this.action = action;
-        }
-
-        public void Display(Colors color = Colors.White, bool hover = true, Colors hoverColor = Colors.Lime, Colors hoverTextColor = Colors.Black)
-        {
-            if (!isInvoked)
-            {
-                if (Program.PointInRect(Program.MousePosition(), box) && hover)
-                {
-                    Color.Pencil(hoverColor);
-                    Program.DrawFullRect(box);
-                    Color.Pencil(hoverTextColor);
-                    Program.DrawText(Name, new(box.pos.x + 10, box.pos.y + 10));
-                }
-                else
-                {
-                    Color.Pencil(color);
-                    Program.DrawRect(box);
-                    Program.DrawText(Name, new(box.pos.x + 10, box.pos.y + 10));
-                }
-                if (Program.MouseLeftPressed())
-                {
-                    isInvoked = true;
-                }
-                return;
-            }
-            action.Invoke();
-        }
-    }
+    
 
     class Time
     {
@@ -697,6 +533,12 @@ namespace Main
                     (p.x < (r.pos.x + r.size.x)) &&
                     (p.y >= r.pos.y) &&
                     (p.y < (r.pos.y + r.size.y)));
+        }
+
+        public static bool PointInCircle(Vector2D<int> p, Circle r)
+        {
+            if (r.pos == null) return false;
+            return Math.Sqrt(Math.Pow(r.pos.x - p.x,2) + Math.Pow(r.pos.y - p.y, 2)) <= r.rayon;
         }
 
         public static void DrawFullRect(Rect rect)
@@ -985,7 +827,9 @@ namespace Main
         /// Renders to the window.
         /// </summary> 
         //static Menu
-        static MenuItem c = new("Chess", new Rect(100, 100, 100, 100), Chess_.Chess);
+        
+        static MenuItemBox c = new("Chess", Chess_.Chess, new Rect(100, 100, 100, 100));
+        //static MenuItemCircle c = new("Chess", Chess_.Chess, new Circle(new(100,100),50));
         static void Render()
         {
             Color.Pencil(Colors.Black);
