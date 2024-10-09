@@ -1,12 +1,9 @@
-﻿using Chess;
-using Ludo;
+﻿using static Chess.Chess;
+using static Ludo.Ludo;
 using SDL2;
-using System;
-using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Xml.Linq;
 using static SDL2.SDL;
+using Classes;
 
 /*
  * Petite librairie chill développée par James Tizanou à partir du 04/06/2024 (04 juin 2024)
@@ -20,458 +17,13 @@ using static SDL2.SDL;
 
 namespace Main
 {
-    #region classes
-
-    class Vector2D<Numeric>
-    {
-        public Numeric? x;
-        public Numeric? y;
-
-        public static Vector2D<Numeric> operator +(Vector2D<Numeric> a, Vector2D<Numeric> b)
-        {
-            dynamic? ax = a.x;
-            dynamic? bx = b.x;
-            dynamic? ay = a.y;
-            dynamic? by = b.y;
-            return new Vector2D<Numeric>(ax + bx, ay + by);
-        }
-
-        public static Vector2D<Numeric> operator -(Vector2D<Numeric> a, Vector2D<Numeric> b)
-        {
-            dynamic? ax = a.x;
-            dynamic? bx = b.x;
-            dynamic? ay = a.y;
-            dynamic? by = b.y;
-            return new Vector2D<Numeric>(ax - bx, ay - by);
-        }
-
-        public static Vector2D<Numeric> operator /(Vector2D<Numeric> a, int n)
-        {
-            dynamic? ax = a.x;
-            dynamic? ay = a.y;
-            return new Vector2D<Numeric>(ax / n, ay / n);
-        }
-
-        public static Vector2D<Numeric> operator *(Vector2D<Numeric> a, int n)
-        {
-            dynamic? ax = a.x;
-            dynamic? ay = a.y;
-            return new Vector2D<Numeric>(ax * n, ay * n);
-        }
-
-
-        public Vector2D(Numeric? x, Numeric? y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    class Rect
-    {
-        public Vector2D<int>? pos = new Vector2D<int>(0, 0);
-        public Vector2D<int>? size = new Vector2D<int>(0, 0);
-
-        public static explicit operator Rect(SDL_Rect rect)
-        {
-            return new Rect(new Vector2D<int>(rect.x, rect.y), new Vector2D<int>(rect.w, rect.h));
-        }
-
-        public Rect(Vector2D<int>? _pos, Vector2D<int>? _size)
-        {
-            pos = _pos;
-            size = _size;
-        }
-
-        public Rect(int x, int y, int w, int h)
-        {
-            pos = new Vector2D<int>(x, y);
-            size = new Vector2D<int>(w, h);
-        }
-    }
-
-    class Circle
-    {
-        public Vector2D<int>? pos;
-        public int rayon;
-
-        public Circle(Vector2D<int> p, int r)
-        {
-            pos = p;
-            rayon = r;
-        }
-    }
-    class Color
-    {
-        public byte r;
-        public byte g;
-        public byte b;
-        public byte a;
-        public static explicit operator Color(SDL_Color coul)
-        {
-            return new Color(coul.r, coul.g, coul.b, coul.a);
-        }
-
-        public static explicit operator Color(Colors coul)
-        {
-            if (Colors.Red == coul)
-            {
-                return new Color(255, 0, 0, 255);
-            }
-            else if (Colors.Blue == coul)
-            {
-                return new Color(0, 0, 255, 255);
-            }
-            else if (Colors.Green == coul)
-            {
-                return new Color(0, 255, 0, 255);
-            }
-            else if (Colors.Yellow == coul)
-            {
-                return new Color(255, 255, 0, 255);
-            }
-            else if (Colors.White == coul)
-            {
-                return new Color(255, 255, 255, 255);
-            }
-            else if (Colors.Black == coul)
-            {
-                return new Color(0, 0, 0, 255);
-            }
-            else if (Colors.Orange == coul)
-            {
-                return new Color(255, 165, 0, 255);
-            }
-            else if (Colors.Pink == coul)
-            {
-                return new Color(255, 192, 203, 255);
-            }
-            else if (Colors.Purple == coul)
-            {
-                return new Color(160, 32, 240, 255);
-            }
-            else if (Colors.Cyan == coul)
-            {
-                return new Color(0, 255, 255, 255);
-            }
-            else if (Colors.SkyBlue == coul)
-            {
-                return new Color(135, 206, 235, 255);
-            }
-            else if (Colors.Lime == coul)
-            {
-                return new(191, 255, 0);
-            }
-            throw new Exception("Couleur introuvale");
-        }
-
-        public static Color GetPencil()
-        {
-            byte r;
-            byte g;
-            byte b;
-            byte a;
-            SDL_GetRenderDrawColor(Program.renderer, out r, out g, out b, out a);
-            return new Color(r, g, b, a);
-        }
-
-        public static void Pencil(Color coul)
-        {
-            SDL_SetRenderDrawColor(Program.renderer, coul.r, coul.g, coul.b, coul.a);
-        }
-
-        public static void Pencil(byte r, byte g, byte b, byte a = 255)
-        {
-            SDL_SetRenderDrawColor(Program.renderer, r, g, b, a);
-        }
-
-        public static void Pencil(Colors coul)
-        {
-            Color c = (Color)coul;
-            SDL_SetRenderDrawColor(Program.renderer, c.r, c.g, c.b, c.a);
-        }
-
-
-        public Color(byte _r, byte _g, byte _b, byte _a = 255)
-        {
-            r = _r;
-            g = _g;
-            b = _b;
-            a = _a;
-        }
-    }
-
-    class SoundManager
-    {
-
-    }
-
-    class Sound
-    {
-        public string? file;
-        IntPtr sonData;
-
-        public Sound(string file)
-        {
-            file = "../../../Sounds/" + file;
-            //pointeur vers le son loadé (idealement tu le garde dans une liste pour eviter de le loader a chaque frame lol)
-            this.file = file;
-            if (file[file.Length - 1] == 'v')
-            {
-                sonData = SDL_mixer.Mix_LoadWAV(file);
-            }
-            else
-            {
-                sonData = SDL_mixer.Mix_LoadMUS(file);
-            }
-            //sonData = SDL_mixer.Mix_LoadWAV(file);
-            Console.WriteLine(SDL_mixer.Mix_GetError());
-        }
-
-        ~Sound()
-        {
-            SDL_mixer.Mix_FreeChunk(sonData);
-        }
-
-        public void Play()
-        {
-            if (file[file.Length - 1] == 'v')
-            {
-                SDL_mixer.Mix_PlayChannel(-1, sonData, 1);
-            }
-            else
-            {
-                SDL_mixer.Mix_PlayMusic(sonData, -1);
-            }
-
-        }
-
-        public void Stop()
-        {
-            if (file[file.Length - 1] == 'v')
-            {
-                SDL_mixer.Mix_HaltChannel(-1);
-            }
-            else
-            {
-                SDL_mixer.Mix_HaltMusic();
-            }
-        }
-    }
-
-    /*class Text
-    {
-        IntPtr font;
-        IntPtr textTexture;
-        string text;
-        IntPtr textSurface;
-        Vector2D<int> pos;
-        string fontPath;
-        int size;
-        SDL_Color col;
-
-        public Text(string text, Vector2D<int> pos, int size = 30, string fontPath = "Fonts/Minecraft.ttf")
-        {
-            fontPath = "../../../" + fontPath;
-            Color coul = Color.GetPencil();
-            SDL_Color c = new SDL_Color();
-            c.r = coul.r;
-            c.g = coul.g;
-            c.b = coul.b;
-            c.a = coul.a;
-            col = c;
-            this.text = text;
-            this.pos = pos;
-            this.fontPath = fontPath;
-            this.size = size;
-            font = SDL_ttf.TTF_OpenFont(this.fontPath, this.size);
-            if (font == IntPtr.Zero)
-            {
-                Console.WriteLine(SDL_GetError());
-            }
-            textSurface = SDL_ttf.TTF_RenderText_Solid(font, text, col);
-            textTexture = SDL_CreateTextureFromSurface(Program.renderer, textSurface);
-        }
-
-        public void Draw()
-        {
-            SDL_Rect dest = new SDL_Rect();
-            dest.x = pos.x;
-            dest.y = pos.y;
-            dest.w = 100;
-            dest.h = 100;
-            uint f = 0;
-            int g = 0;
-
-            SDL_Rect src = new SDL_Rect();
-            src.x = 0;
-            src.y = 0;
-            src.w = 100; // textSurface.w;
-            src.h = 100;  // textSurface.h;
-
-            SDL_QueryTexture(textTexture, out f, out g, out src.w, out src.h);
-            SDL_QueryTexture(textTexture, out f, out g, out dest.w, out dest.h);
-
-            SDL_RenderCopy(Program.renderer, textTexture, ref src, ref dest);
-            SDL_DestroyTexture(textTexture);
-        }
-
-        public void ChangeText(string newText)
-        {
-            text = newText;
-            font = SDL_ttf.TTF_OpenFont(fontPath, size);
-            if (font == IntPtr.Zero)
-            {
-                Console.WriteLine(SDL_GetError());
-            }
-            textSurface = SDL_ttf.TTF_RenderText_Solid(font, text, col);
-            textTexture = SDL_CreateTextureFromSurface(Program.renderer, textSurface);
-        }
-    }*/
-
-    
-
-    class Time
-    {
-        public uint Temps { get; set; }
-        public TempsFormat Format { init; get; }
-
-        public Time(uint temps, TempsFormat format = TempsFormat.MilliSecondes)
-        {
-            Temps = temps;
-            if (format == TempsFormat.MilliSecondes || format == TempsFormat.Secondes || format == TempsFormat.Minutes || format == TempsFormat.Heures)
-            {
-                Format = format;
-            }
-        }
-
-        // Retourne le temps écoulé depuis le début de l'exécution du programme dans le format demandé
-        public static uint GetTime(TempsFormat format = TempsFormat.Secondes)
-        {
-            switch(format)
-            {
-                case TempsFormat.MilliSecondes:
-                    return SDL_GetTicks();
-                case TempsFormat.Secondes:
-                    return SDL_GetTicks() / 1000;
-                case TempsFormat.Minutes:
-                    return SDL_GetTicks() / 60000;
-                case TempsFormat.Heures:
-                    return SDL_GetTicks() / (60000 * 60);
-            }
-            throw new NotImplementedException("Le format ne peut être que des millisecondes, des secondes, des minutes ou des heures");
-        }
-    }
-
-    public enum TempsFormat
-    {
-        MilliSecondes, // A
-        Secondes, // S
-        Minutes, // M
-        Heures, // H
-        SA, // secondes et millisecondes
-        MS, // minutes et secondes
-        MSA, // Minutes, secondes et millisecondes
-        HM, // Heures et minutes
-        HS, // Heures et secondes
-        HMS, // Heures et minutes et secondes
-        HMSA, // Heures et minutes et secondes et millisecondes
-    }
-
-    class Minuteur
-    {
-        public Time Debut;
-        public Time Duree;
-
-        public Minuteur(uint duree)
-        {
-            Debut = new Time(SDL_GetTicks());
-            Duree = new Time(duree);
-        }
-
-        public bool isFinished()
-        {
-            return Duree.Temps + Debut.Temps > SDL_GetTicks();
-        }
-
-        public uint TimeLeft()
-        {
-            if (SDL_GetTicks() < Duree.Temps)
-            {
-                return Duree.Temps - (SDL_GetTicks() - Debut.Temps);
-            }
-            Console.WriteLine($"Le minuteur de {Duree.Temps} {Duree.Format.ToString().ToLower()} est terminé");
-            return 0;
-        }
-
-        public uint TimeNow()
-        {
-            if (Debut.Temps + (SDL_GetTicks() - Debut.Temps) < Duree.Temps)
-            {
-                return SDL_GetTicks() - Debut.Temps;
-            }
-            Console.WriteLine($"Le minuteur actuel est terminé");
-            return 0;
-        }
-
-        public void Ecrire(Vector2D<int> pos,string format = "mm:ss")
-        {
-            string texte = "";
-            DateTime tempsRestant = new DateTime(TimeLeft());
-            texte = tempsRestant.ToString(format,CultureInfo.InvariantCulture); 
-            /*switch (format)
-            {
-                case TempsFormat.MilliSecondes:
-                    texte = $"{tempsRestant}";
-                    break;
-                case TempsFormat.Secondes:
-                    texte = $"{tempsRestant / 1000}";
-                    break;
-                case TempsFormat.Minutes:
-                    texte = $"{tempsRestant / 60000}";
-                    break;
-                case TempsFormat.Heures:
-                    texte = $"{tempsRestant / 3600000}";
-                    break;
-                case TempsFormat.SA:
-                    texte = $"{tempsRestant / 1000}:{tempsRestant - (tempsRestant / 1000) * 1000}";
-                    break;
-                case TempsFormat.MSA:
-                    //texte = $"{tempsRestant / 60000}:{tempsRestant % 1000}:{tempsRestant - (tempsRestant / 1000) * 1000}";
-                    break;
-                    Program.DrawText(texte,pos);
-            }*/
-        }
-    }
-
-
-    #endregion
-
-    #region couleurs
-    public enum Colors
-    {
-        White,
-        Red,
-        Green,
-        Blue,
-        Black,
-        Yellow,
-        Orange,
-        Cyan,
-        Purple,
-        Pink,
-        SkyBlue,
-        Lime
-    }
-    #endregion
-
     abstract class Program
     {
         #region variables globales et main
         public static IntPtr window;
         public static IntPtr renderer;
         public static bool running = true;
-        static byte[] old_key_state;
+        static byte[]? old_key_state;
         static uint old_m_state;
 
         static void Main()
@@ -517,6 +69,7 @@ namespace Main
 
         public static void DrawRect(Rect rect)
         {
+            if (rect.pos == null || rect.size == null) return;
             var rectangle = new SDL_Rect
             {
                 x = rect.pos.x,
@@ -529,6 +82,7 @@ namespace Main
 
         public static bool PointInRect(Vector2D<int> p, Rect r)
         {
+            if (r.pos == null || r.size == null) return false;
             return ((p.x >= r.pos.x) &&
                     (p.x < (r.pos.x + r.size.x)) &&
                     (p.y >= r.pos.y) &&
@@ -543,6 +97,7 @@ namespace Main
 
         public static void DrawFullRect(Rect rect)
         {
+            if (rect.pos == null || rect.size == null) return;
             var rectangle = new SDL_Rect
             {
                 x = rect.pos.x,
@@ -555,6 +110,7 @@ namespace Main
 
         public static void DrawCircle(Circle cercle)
         {
+            if (cercle.pos == null) return;
             for (int i = 0; i < 360; i++)
             {
                 Vector2D<int> vect = new Vector2D<int>((int)(Math.Cos(i) * cercle.rayon) + cercle.pos.x, (int)(Math.Sin(i) * cercle.rayon) + cercle.pos.y);
@@ -564,9 +120,10 @@ namespace Main
 
         public static void DrawFullCircle(Circle cercle)
         {
+            if (cercle == null || cercle.pos == null) return;
             Rect delim = new Rect(new Vector2D<int>(cercle.pos.x - cercle.rayon, cercle.pos.y - cercle.rayon),
                                   new Vector2D<int>(cercle.rayon * 2, cercle.rayon * 2));
-
+            if (delim.pos == null || delim.size == null) return;
             for (int n = delim.pos.y; n <= delim.pos.y + delim.size.y; n++)
             {
                 for (int i = delim.pos.x; i <= delim.pos.x + delim.size.x; i++)
@@ -764,6 +321,7 @@ namespace Main
 
         public static bool KeyPressed(SDL_Scancode code)
         {
+            if (old_key_state == null) return false;
             if (KeyHeld(code) && old_key_state[(int)code] == 0) //pour savoir si le bouton est pressé on regarde si il est tenu et si il l'était pas la frame d'avant avec old key state
             {
                 return true;
@@ -826,10 +384,10 @@ namespace Main
         /// <summary>
         /// Renders to the window.
         /// </summary> 
-        //static Menu
         
-        static MenuItemBox c = new("Chess", Chess_.Chess, new Rect(100, 100, 100, 100));
-        //static MenuItemCircle c = new("Chess", Chess_.Chess, new Circle(new(100,100),50));
+        
+        static MenuItemBox chessMenu = new("Chess", ChessMain, new Rect(100, 100, 100, 100));
+        static MenuItemBox ludoMenu = new("Ludo", LudoMain, new Rect(300, 100, 100, 100));
         static void Render()
         {
             Color.Pencil(Colors.Black);
@@ -838,11 +396,8 @@ namespace Main
 
             // update the key state at every frame a la fin
 
-            c.Display();
-
-            //Ludo_.Ludo();
-
-            //Chess_.Chess();
+            chessMenu.Display();
+            ludoMenu.Display();
 
             UpdateKeyInfo();
 

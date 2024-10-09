@@ -13,8 +13,8 @@ namespace Ludo
     {
         public static int at(int index)
         {
-            int a = index % Ludo_.chemin.Length;
-            return Ludo_.chemin[a];
+            int a = index % Ludo.chemin.Length;
+            return Ludo.chemin[a];
         }
 
         public static int IndexOf(int el, List<int> vect)

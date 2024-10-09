@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.Intrinsics;
-using System.Text;
-using System.Threading.Tasks;
-using Main;
+﻿using Classes;
 
 namespace Ludo
 {
@@ -32,7 +24,7 @@ namespace Ludo
             name = n;
             tokenSpawns = spawns;
             spawnTile = st;
-            chemin_p = Util.RearangerVecteur(spawnTile, Ludo_.chemin);
+            chemin_p = Util.RearangerVecteur(spawnTile, Ludo.chemin);
             token1 = new Pion(1, tokenSpawns[0], name);
             token2 = new Pion(2, tokenSpawns[1], name);
             token3 = new Pion(3, tokenSpawns[2], name);
@@ -45,7 +37,7 @@ namespace Ludo
             name = x.name;
             tokenSpawns = x.tokenSpawns;
             spawnTile = x.spawnTile;
-            chemin_p = Util.RearangerVecteur(x.spawnTile, Ludo_.chemin);
+            chemin_p = Util.RearangerVecteur(x.spawnTile, Ludo.chemin);
             token1 = new Pion(1, x.tokenSpawns[0], x.name);
             token2 = new Pion(2, x.tokenSpawns[1], x.name);
             token3 = new Pion(3, x.tokenSpawns[2], x.name);
@@ -88,35 +80,35 @@ namespace Ludo
 
         public Pion PionClique(Vector2D<int> pos)
         {
-            if (pos == Ludo_.board.grille[token1.caseActuelle].pos)
+            if (pos == Ludo.board.grille[token1.caseActuelle].pos)
             {
                 return token1;
             }
-            else if (pos == Ludo_.board.grille[token2.caseActuelle].pos)
+            else if (pos == Ludo.board.grille[token2.caseActuelle].pos)
             {
                 return token2;
             }
-            else if (pos == Ludo_.board.grille[token3.caseActuelle].pos)
+            else if (pos == Ludo.board.grille[token3.caseActuelle].pos)
             {
                 return token3; 
             }
-            else if (pos == Ludo_.board.grille[token4.caseActuelle].pos)
+            else if (pos == Ludo.board.grille[token4.caseActuelle].pos)
             {
                 return token4;
             }
-            else if (/*token1.outOfHome &&*/ token1.caseActuelle < 52 && pos == Ludo_.board.grille[chemin_p[token1.caseActuelle]].pos)
+            else if (/*token1.outOfHome &&*/ token1.caseActuelle < 52 && pos == Ludo.board.grille[chemin_p[token1.caseActuelle]].pos)
             {
                 return token1;
             }
-            else if (/*token2.outOfHome &&*/ token2.caseActuelle < 52 && pos == Ludo_.board.grille[chemin_p[token2.caseActuelle]].pos)
+            else if (/*token2.outOfHome &&*/ token2.caseActuelle < 52 && pos == Ludo.board.grille[chemin_p[token2.caseActuelle]].pos)
             {
                 return token2;
             }
-            else if (/*token3.outOfHome &&*/ token3.caseActuelle < 52 && pos == Ludo_.board.grille[chemin_p[token3.caseActuelle]].pos)
+            else if (/*token3.outOfHome &&*/ token3.caseActuelle < 52 && pos == Ludo.board.grille[chemin_p[token3.caseActuelle]].pos)
             {
                 return token3;
             }
-            else if (/*token4.outOfHome &&*/ token4.caseActuelle < 52 && pos == Ludo_.board.grille[chemin_p[token4.caseActuelle]].pos)
+            else if (/*token4.outOfHome &&*/ token4.caseActuelle < 52 && pos == Ludo.board.grille[chemin_p[token4.caseActuelle]].pos)
             {
                 return token4;
             }

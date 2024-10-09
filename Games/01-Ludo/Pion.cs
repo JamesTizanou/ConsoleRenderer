@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Classes;
 
 namespace Ludo
 {
@@ -53,14 +54,14 @@ namespace Ludo
 
         public unsafe void Display()
         {
-            pos = Ludo_.board.grille[caseActuelle].pos;
+            pos = Ludo.board.grille[caseActuelle].pos;
             if (outOfHome)
             {
-                pos = Ludo_.board.grille[joueur->chemin_p[caseActuelle]].pos;
+                pos = Ludo.board.grille[joueur->chemin_p[caseActuelle]].pos;
             }
             Color col = Color.GetPencil();
             Color.Pencil(joueur->couleur);
-            Circle circ = new Circle(new Vector2D<int>(pos.x + Ludo_.board.tileSize.x / 2, pos.y + Ludo_.board.tileSize.x / 2), (Ludo_.board.tileSize.x - 10) / 2);
+            Circle circ = new Circle(new Vector2D<int>(pos.x + Ludo.board.tileSize.x / 2, pos.y + Ludo.board.tileSize.x / 2), (Ludo.board.tileSize.x - 10) / 2);
             Program.DrawFullCircle(circ);
             Color.Pencil(Colors.Black);
             Program.DrawCircle(circ);
@@ -72,7 +73,7 @@ namespace Ludo
             if (outOfHome)
             {
                 caseActuelle += De.val;
-                //pos = Ludo_.board.grille[joueur->chemin_p[caseActuelle]].pos;
+                //pos = Ludo.board.grille[joueur->chemin_p[caseActuelle]].pos;
             }
         }
     }

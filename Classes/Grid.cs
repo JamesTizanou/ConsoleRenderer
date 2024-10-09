@@ -1,4 +1,6 @@
-﻿namespace Main
+﻿using Main;
+
+namespace Classes
 {
     class Tile
     {

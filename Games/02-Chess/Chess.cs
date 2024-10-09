@@ -1,5 +1,6 @@
-﻿using Main;
-using static Main.Color;
+﻿using Classes;
+using Main;
+using static Classes.Color;
 using static Main.Program;
 
 // TODO:
@@ -14,7 +15,7 @@ namespace Chess
         STARTGAME,
         PARAMS
     }
-    class Chess_
+    class Chess
     {
         static int t = 75;
         static Colors couleur1 = Colors.White;
@@ -179,7 +180,7 @@ namespace Chess
         }
 
         public static Minuteur min = new Minuteur(100000);
-        public static void Chess()
+        public static void ChessMain()
         {
             if (init)
             {

@@ -12,4 +12,13 @@
     <PackageReference Include="Sayers.SDL2.Core" Version="1.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Games\08-Tetris\" />
+    <Folder Include="Games\04-Snake\" />
+    <Folder Include="Games\05-Poker\" />
+    <Folder Include="Games\05-Solitaire\" />
+    <Folder Include="Games\07-CheckGames\" />
+    <Folder Include="Games\03-ChatRoom\" />
+  </ItemGroup>
+
 </Project>

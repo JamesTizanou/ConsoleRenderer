@@ -1,4 +1,5 @@
-﻿using Main;
+﻿using Classes;
+using Main;
 
 namespace Ludo
 {
@@ -13,7 +14,7 @@ namespace Ludo
         }
 
     }
-    class Ludo_
+    class Ludo
     {
         public static Grid board = new Grid(new Vector2D<int>(50, 50), new Vector2D<int>(45, 45), 15, 15, Colors.White);
         public static int[] chemin = new int[]{ 6,7,8,23,38,53,68, 83,99,100,101,102,103,104,119,134,133,
@@ -22,7 +23,7 @@ namespace Ludo
         static bool FirstExec = true;
 
 
-        public static void Ludo()
+        public static void LudoMain()
         {
             if (FirstExec)
             {
