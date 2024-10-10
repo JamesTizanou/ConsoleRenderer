@@ -4,19 +4,19 @@ using System.Net.Sockets;
 
 namespace Classes
 {
-    class Server
+    abstract class Server
     {
-        
+        public static uint Port { get; } = 8001;
         public static void ServerMain()
         {
             try
             {
-                IPAddress ipAd = IPAddress.Parse("172.21.5.99"); //use local m/c IP address, and use the same in the client
+                IPAddress ipAd = IPAddress.Parse("127.0.0.1"); //use local m/c IP address, and use the same in the client
                 /* Initializes the Listener */
-                TcpListener myList = new TcpListener(ipAd, 8001);
+                TcpListener myList = new TcpListener(ipAd, (int)Port);
                 /* Start Listeneting at the specified port */
                 myList.Start();
-                Console.WriteLine("The server is running at port 8001...");
+                Console.WriteLine($"The server is running at port 8001...");
                 Console.WriteLine("The local End point is :" + myList.LocalEndpoint);
                 Console.WriteLine("Waiting for a connection.....");
                 Socket s = myList.AcceptSocket();
@@ -48,7 +48,7 @@ namespace Classes
             {
                 TcpClient tcpclnt = new TcpClient();
                 Console.WriteLine("Connecting.....");
-                tcpclnt.Connect("172.21.5.99", 8001); // use the ipaddress as in the server program
+                tcpclnt.Connect("127.0.0.1", 8001); // use the ipaddress as in the server program
                 Console.WriteLine("Connected");
                 Console.Write("Enter the string to be transmitted : ");
                 String str = Console.ReadLine();
@@ -59,6 +59,7 @@ namespace Classes
                 stm.Write(ba, 0, ba.Length);
                 byte[] bb = new byte[100];
                 int k = stm.Read(bb, 0, 100);
+                Console.WriteLine("apres le read"); 
                 for (int i = 0; i < k; i++)
                     Console.Write(Convert.ToChar(bb[i]));
                 tcpclnt.Close();

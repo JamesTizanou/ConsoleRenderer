@@ -396,8 +396,19 @@ namespace Main
 
             // update the key state at every frame a la fin
 
-            chessMenu.Display();
-            ludoMenu.Display();
+            //chessMenu.Display();
+            //ludoMenu.Display();
+            Console.WriteLine("Server or client?: ");
+            string rep = Console.ReadLine();
+            if (rep == "s")
+            {
+                Server.ServerMain();
+            }
+            else if (rep == "c")
+            {
+                Client.ClientMain();
+            }
+            
 
             UpdateKeyInfo();
 
