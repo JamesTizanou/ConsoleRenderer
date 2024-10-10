@@ -25,11 +25,24 @@ namespace Ludo
             tokenSpawns = spawns;
             spawnTile = st;
             chemin_p = Util.RearangerVecteur(spawnTile, Ludo.chemin);
+            //chemin_p.AddRange(AjouterFinChemin(coul));
             token1 = new Pion(1, tokenSpawns[0], name);
             token2 = new Pion(2, tokenSpawns[1], name);
             token3 = new Pion(3, tokenSpawns[2], name);
             token4 = new Pion(4, tokenSpawns[3], name);
         }
+
+        /*private List<int> AjouterFinChemin(Colors player)
+        {
+            List<int> casesFinales = new List<int>();
+            switch (player)
+            {
+                case Colors.Red:
+                    casesFinales.Add()
+            }
+        }*/
+
+        
 
         public Player(Player x)
         {
