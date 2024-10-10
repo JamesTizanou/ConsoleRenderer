@@ -63,6 +63,7 @@ namespace Classes
             for (int i = 0; i < grille.Count; i++)
             {
                 grille[i].Light();
+                //Program.DrawText(i.ToString(), grille[i].pos); // To show the number of the tile
             }
             if (drawContour)
             {

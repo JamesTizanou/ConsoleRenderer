@@ -9,19 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Games\03-ChatRoom\**" />
     <Compile Remove="Games\04-Snake\**" />
     <Compile Remove="Games\05-Poker\**" />
     <Compile Remove="Games\05-Solitaire\**" />
     <Compile Remove="Games\07-CheckGames\**" />
     <Compile Remove="Games\08-Tetris\**" />
-    <EmbeddedResource Remove="Games\03-ChatRoom\**" />
     <EmbeddedResource Remove="Games\04-Snake\**" />
     <EmbeddedResource Remove="Games\05-Poker\**" />
     <EmbeddedResource Remove="Games\05-Solitaire\**" />
     <EmbeddedResource Remove="Games\07-CheckGames\**" />
     <EmbeddedResource Remove="Games\08-Tetris\**" />
-    <None Remove="Games\03-ChatRoom\**" />
     <None Remove="Games\04-Snake\**" />
     <None Remove="Games\05-Poker\**" />
     <None Remove="Games\05-Solitaire\**" />

@@ -202,7 +202,7 @@ namespace Ludo
                             pi.Move();
                             if (De.val != 6)
                             {
-                                //SwitchTurns();
+                                SwitchTurns();
                                 break;
                             }
                             else
