@@ -169,7 +169,8 @@ namespace Ludo
                     De.obtenu = false;
                     pi.outOfHome = true;
                     pi.caseActuelle = 0;
-                    pi.pos = board.grille[pi.joueur->chemin_p[pi.caseActuelle]].pos;
+                    pi.pos.x = board.grille[pi.joueur->chemin_p[pi.caseActuelle]].pos.x;
+                    pi.pos.y = board.grille[pi.joueur->chemin_p[pi.caseActuelle]].pos.y;
                 }
             }
         }

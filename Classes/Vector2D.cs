@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Classes
+﻿namespace Classes
 {
     class Vector2D<Numeric>
     {
@@ -43,6 +37,15 @@ namespace Classes
             return new Vector2D<Numeric>(ax * n, ay * n);
         }
 
+        /*public static implicit operator Vector2D<float>(Vector2D<int> a)
+        {
+            return new Vector2D<float>(a.x, a.y);
+        }
+
+        public static implicit operator Vector2D<int>(Vector2D<float> a)
+        {
+            return new Vector2D<int>((int)a.x, (int)a.y);
+        }*/
 
         public Vector2D(Numeric? x, Numeric? y)
         {

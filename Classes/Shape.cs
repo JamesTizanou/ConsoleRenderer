@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Main;
 using static SDL2.SDL;
 
 namespace Classes
 {
-    class Rect
+    abstract class Shape
     {
         public Vector2D<int>? pos = new Vector2D<int>(0, 0);
+    }
+    class Rect : Shape
+    {
         public Vector2D<int>? size = new Vector2D<int>(0, 0);
 
         public static explicit operator Rect(SDL_Rect rect)
@@ -28,11 +27,15 @@ namespace Classes
             pos = new Vector2D<int>(x, y);
             size = new Vector2D<int>(w, h);
         }
+
+        public bool Hover()
+        {
+            return Program.PointInRect(Program.MousePosition(), this);
+        }
     }
 
-    class Circle
+    class Circle : Shape
     {
-        public Vector2D<int>? pos;
         public int rayon;
 
         public Circle(Vector2D<int> p, int r)
@@ -40,5 +43,13 @@ namespace Classes
             pos = p;
             rayon = r;
         }
+
+        /*public Circle(Vector2D<float> p, int r)
+        {
+            if (pos == null) return;
+            pos.x = (int)p.x;
+            pos.y = (int)p.y;
+            rayon = r;
+        }*/
     }
 }

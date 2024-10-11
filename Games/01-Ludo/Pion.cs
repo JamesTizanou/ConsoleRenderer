@@ -1,11 +1,5 @@
-﻿using Main;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using Classes;
+﻿using Classes;
+using Main;
 
 namespace Ludo
 {
@@ -16,7 +10,7 @@ namespace Ludo
         public int caseActuelle;
         public bool outOfHome = false;
         unsafe public Player* joueur;
-        public Vector2D<int> pos = new(0,0);
+        public Vector2D<int> pos = new(0, 0);
 
         unsafe Player* GetPlayerByName(string nomDuJoueur)
         {
@@ -45,6 +39,8 @@ namespace Ludo
             spawn = s;
             joueur = GetPlayerByName(nomDuJoueur);
             caseActuelle = s;
+            pos.x = Ludo.board.grille[s].pos.x;
+            pos.y = Ludo.board.grille[s].pos.y;
         }
 
         public void ShowNumber()
@@ -61,7 +57,7 @@ namespace Ludo
             }
             Color col = Color.GetPencil();
             Color.Pencil(joueur->couleur);
-            Circle circ = new Circle(new Vector2D<int>(pos.x + Ludo.board.tileSize.x / 2, pos.y + Ludo.board.tileSize.x / 2), (Ludo.board.tileSize.x - 10) / 2);
+            Circle circ = new Circle(new(pos.x + Ludo.board.tileSize.x / 2, pos.y + Ludo.board.tileSize.x / 2), (Ludo.board.tileSize.x - 10) / 2);
             Program.DrawFullCircle(circ);
             Color.Pencil(Colors.Black);
             Program.DrawCircle(circ);

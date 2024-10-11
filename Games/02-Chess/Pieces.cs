@@ -1,5 +1,5 @@
-﻿using Main;
-using Classes;
+﻿using Classes;
+using Main;
 
 namespace Chess
 {

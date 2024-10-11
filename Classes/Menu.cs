@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Main;
+﻿using Main;
 
 namespace Classes
 {
@@ -11,9 +6,10 @@ namespace Classes
     {
         public List<MenuItem> Actions { get; set; } = new();
         string? Nom { get; set; }
+        public MenuItem? DisplayedItem => Actions.Where(action => { return action.IsExecuted; }).Count() > 0 ? Actions.Where(action => { return action.IsExecuted; }).First() : null;
         public Menu(string nom, List<MenuItem> m)
         {
-            // Actions.
+            Actions = m;
         }
         public void Show()
         {
@@ -28,17 +24,27 @@ namespace Classes
     {
         public string Name { get; set; }
 
-        protected Action action;
+        public Action action;
 
-        protected bool isInvoked = false;
+        public Shape Shape { get; set; }
 
+        public bool IsExecuted = false;
 
-
-        public MenuItem(string name, Action action)
+        public MenuItem(string name, Action action, Shape shape)
         {
             Name = name;
             this.action = action;
+            Shape = shape;
         }
+
+        /*public virtual bool IsClicked() 
+        {
+            Rect shape = new Rect(0,0,0,0);
+
+            if (Shape is Rect) { shape = (Rect)Shape; return shape.Hover() && Program.MouseLeftPressed(); }
+            if (Shape is Circle) { return false; }
+            return false;
+        }*/
 
         public virtual void Display(Colors color = Colors.White, bool hover = true, Colors hoverColor = Colors.Lime, Colors hoverTextColor = Colors.Black)
         {
@@ -49,37 +55,47 @@ namespace Classes
     class MenuItemBox : MenuItem
     {
         public Rect Box;
-        public MenuItemBox(string name, Action action, Rect box) : base(name, action)
+        public MenuItemBox(string name, Action action, Rect box) : base(name, action, box)
         {
             Name = name;
             this.action = action;
             Box = box;
         }
+
+        /*public override bool IsClicked()
+        {
+            return base.IsClicked();
+        }*/
         public override void Display(Colors color = Colors.White, bool hover = true, Colors hoverColor = Colors.Lime, Colors hoverTextColor = Colors.Black)
         {
             if (Box.pos == null) return;
-            if (!isInvoked)
+            //if (!isInvoked)
+            //{
+            if (Program.PointInRect(Program.MousePosition(), Box) && hover)
             {
-                if (Program.PointInRect(Program.MousePosition(), Box) && hover)
+                Color.Pencil(hoverColor);
+                Program.DrawFullRect(Box);
+                Color.Pencil(hoverTextColor);
+                Program.DrawText(Name, new(Box.pos.x + 10, Box.pos.y + 10));
+                if (Program.MouseLeftPressed())
                 {
-                    Color.Pencil(hoverColor);
-                    Program.DrawFullRect(Box);
-                    Color.Pencil(hoverTextColor);
-                    Program.DrawText(Name, new(Box.pos.x + 10, Box.pos.y + 10));
-                    if (Program.MouseLeftPressed())
+                    //isInvoked = true;
+                    if (Enum.TryParse(Name, true, out Games game))
                     {
-                        isInvoked = true;
+                        IsExecuted = true;
+                        Program.RunningGame = game;
                     }
                 }
-                else
-                {
-                    Color.Pencil(color);
-                    Program.DrawRect(Box);
-                    Program.DrawText(Name, new(Box.pos.x + 10, Box.pos.y + 10));
-                }
-                return;
             }
-            action.Invoke();
+            else
+            {
+                Color.Pencil(color);
+                Program.DrawRect(Box);
+                Program.DrawText(Name, new(Box.pos.x + 10, Box.pos.y + 10));
+            }
+            return;
+            //}
+            //action.Invoke();
         }
     }
 
@@ -88,7 +104,7 @@ namespace Classes
         public bool IsChecked = false;
         public Circle CheckPoint;
 
-        public MenuItemCircle(string name, Action action, Circle cercle) : base(name, action)
+        public MenuItemCircle(string name, Action action, Circle cercle) : base(name, action, cercle)
         {
             Name = name;
             this.action = action;
@@ -98,7 +114,7 @@ namespace Classes
         public override void Display(Colors color = Colors.White, bool hover = true, Colors hoverColor = Colors.Lime, Colors hoverTextColor = Colors.Black)
         {
             if (CheckPoint.pos == null) return;
-            if (!isInvoked)
+            //if (!isInvoked)
             {
                 if (Program.PointInCircle(Program.MousePosition(), CheckPoint) && hover)
                 {
@@ -108,7 +124,11 @@ namespace Classes
                     Program.DrawText(Name, new(CheckPoint.pos.x + 10, CheckPoint.pos.y + 10));
                     if (Program.MouseLeftPressed())
                     {
-                        isInvoked = true;
+                        //isInvoked = true;
+                        if (Enum.TryParse(Name, true, out Games game))
+                        {
+                            Program.RunningGame = game;
+                        }
                     }
                 }
                 else
@@ -119,7 +139,7 @@ namespace Classes
                 }
                 return;
             }
-            action.Invoke();
+            //action.Invoke();
         }
     }
 }

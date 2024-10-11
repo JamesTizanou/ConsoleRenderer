@@ -1,9 +1,9 @@
-﻿using static Chess.Chess;
-using static Ludo.Ludo;
+﻿using Classes;
 using SDL2;
 using System.Runtime.InteropServices;
+using static Chess.Chess;
+using static Ludo.Ludo;
 using static SDL2.SDL;
-using Classes;
 
 /*
  * Petite librairie chill développée par James Tizanou à partir du 04/06/2024 (04 juin 2024)
@@ -17,6 +17,13 @@ using Classes;
 
 namespace Main
 {
+    public enum Games
+    {
+        None,
+        Ludo,
+        Chess,
+        ChatRoom
+    }
     abstract class Program
     {
         #region variables globales et main
@@ -25,6 +32,13 @@ namespace Main
         public static bool running = true;
         static byte[]? old_key_state;
         static uint old_m_state;
+        public static Games RunningGame = Games.None;
+        /*public static Dictionary<Games, Action> PlayGame = new Dictionary<Games, Action>()
+        {
+            {Games.Chess, ChessMain },
+            {Games.Ludo, LudoMain },
+            {Games.ChatRoom, ChatRoom }
+        };*/
 
         static void Main()
         {
@@ -92,7 +106,7 @@ namespace Main
         public static bool PointInCircle(Vector2D<int> p, Circle r)
         {
             if (r.pos == null) return false;
-            return Math.Sqrt(Math.Pow(r.pos.x - p.x,2) + Math.Pow(r.pos.y - p.y, 2)) <= r.rayon;
+            return Math.Sqrt(Math.Pow(r.pos.x - p.x, 2) + Math.Pow(r.pos.y - p.y, 2)) <= r.rayon;
         }
 
         public static void DrawFullRect(Rect rect)
@@ -384,20 +398,9 @@ namespace Main
         /// <summary>
         /// Renders to the window.
         /// </summary> 
-        
-        
-        static MenuItemBox chessMenu = new("Chess", ChessMain, new Rect(100, 100, 100, 100));
-        static MenuItemBox ludoMenu = new("Ludo", LudoMain, new Rect(300, 100, 100, 100));
-        static void Render()
+
+        public static void ChatRoom()
         {
-            Color.Pencil(Colors.Black);
-            // Clears the current render surface.
-            Clear();
-
-            // update the key state at every frame a la fin
-
-            //chessMenu.Display();
-            //ludoMenu.Display();
             Console.WriteLine("Server or client?: ");
             string rep = Console.ReadLine();
             if (rep == "s")
@@ -408,7 +411,37 @@ namespace Main
             {
                 Client.ClientMain();
             }
-            
+        }
+
+        public static Menu Menu = new Menu("Écran principal", new()
+        {
+             new MenuItemBox(Games.Chess.ToString(), ChessMain, new Rect(100, 100, 100, 100)),
+             new MenuItemBox(Games.Ludo.ToString(), LudoMain, new Rect(300, 100, 100, 100)),
+             new MenuItemBox(Games.ChatRoom.ToString(), ChatRoom, new Rect(100, 300, 150, 100))
+        });
+
+
+        static void Render()
+        {
+            Color.Pencil(Colors.Black);
+            // Clears the current render surface.
+            Clear();
+
+            // update the key state at every frame a la fin
+            if (RunningGame == Games.None)
+            {
+                Menu.Show();
+                /*foreach (var item in Menu.Actions)
+                {
+                    item.Display();
+                }*/
+            }
+            else
+            {
+                if (Menu.DisplayedItem == null) return;
+                Menu.DisplayedItem.action.Invoke();
+                //PlayGame[RunningGame].Invoke();
+            }
 
             UpdateKeyInfo();
 
