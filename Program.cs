@@ -399,17 +399,23 @@ namespace Main
         /// Renders to the window.
         /// </summary> 
 
+        static Server serv = new Server(8001);
+        static Client client = new Client(8001);
+
         public static void ChatRoom()
         {
-            Console.WriteLine("Server or client?: ");
-            string rep = Console.ReadLine();
-            if (rep == "s")
+            Console.WriteLine("qui es-tu? ");
+            string? whoareyou = Console.ReadLine();
+            if (whoareyou == "s")
             {
-                Server.ServerMain();
+                serv.Start();
             }
-            else if (rep == "c")
+            else
             {
-                Client.ClientMain();
+                while (true)
+                {
+                    client.SendMessage();
+                }
             }
         }
 
