@@ -1,6 +1,6 @@
-﻿using System.Text;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace Classes
 {
@@ -8,7 +8,7 @@ namespace Classes
     {
         public uint Port { get; init; }
         public List<Socket> Clients = new List<Socket>();
-        private TcpListener Listener {  get; init; }
+        private TcpListener Listener { get; init; }
 
         public Server(uint port)
         {
@@ -37,9 +37,12 @@ namespace Classes
 
                 foreach (var client in Clients)
                 {
-                    if (/*check if there's a message*/ client.ReceiveAsync(/*b*/ new SocketAsyncEventArgs()))
+                    if (/*check if there's a message*/ true)
                     {
-                        int k = client.Receive(b);
+                        int k = client.ReceiveAsync(b, SocketFlags.None).ContinueWith(() =>
+                        {
+
+                        }); //client.Receive(b);
                         Console.WriteLine("Recieved...");
                         for (int i = 0; i < k; i++)
                             Console.Write(Convert.ToChar(b[i]));
@@ -61,21 +64,21 @@ namespace Classes
             {
                 
                 /* clean up */
-                /*s.Close();
-                myList.Stop();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error..... " + e.StackTrace);
-            }
-        }*/
+        /*s.Close();
+        myList.Stop();
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine("Error..... " + e.StackTrace);
+    }
+}*/
     }
 
     class Client
     {
         private TcpClient _Client { get; init; }
         private uint ServerPort { get; init; }
-        public Client(uint serverPort) 
+        public Client(uint serverPort)
         {
             _Client = new TcpClient();
             ServerPort = serverPort;
@@ -105,7 +108,7 @@ namespace Classes
                 //int k = stm.Read(bb, 0, 100);
                 //Console.WriteLine("apres le read");
                 //for (int i = 0; i < k; i++)
-                   // Console.Write(Convert.ToChar(bb[i]));
+                // Console.Write(Convert.ToChar(bb[i]));
             }
             catch (Exception e)
             {
