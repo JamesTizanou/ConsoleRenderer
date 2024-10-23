@@ -33,54 +33,46 @@ namespace Classes
                     Clients.Add(s);
                     Console.WriteLine("Connection accepted from " + s.RemoteEndPoint);
                 }
-                byte[] b = new byte[100];
+                
 
                 foreach (var client in Clients)
                 {
-                    if (/*check if there's a message*/ true)
+                    if (client.Available > 0)
                     {
-                        int k = client.ReceiveAsync(b, SocketFlags.None).ContinueWith(() =>
-                        {
-
-                        }); //client.Receive(b);
+                        byte[] b = new byte[client.Available];
+                        int k = client.Receive(b);
                         Console.WriteLine("Recieved...");
+                        string message = "";
                         for (int i = 0; i < k; i++)
-                            Console.Write(Convert.ToChar(b[i]));
-                        //ASCIIEncoding asen = new ASCIIEncoding();
-                        //s.Send(asen.GetBytes("The string was recieved by the server."));
-                        //Console.WriteLine("\nSent Acknowledgement");
+                            message += (Convert.ToChar(b[i]));
+                        Console.WriteLine(message);
+                        Clients.ForEach(localclient =>
+                        {
+                            if (localclient.RemoteEndPoint != client.RemoteEndPoint)
+                            {
+                                // Pour que le serveur renvoie le message aux autres clients, mais ca ne fonctionne pas
+                                /*
+                                ASCIIEncoding asen = new ASCIIEncoding();
+                                localclient.Send(asen.GetBytes(message));*/
+                            }
+                        });
                     }
                 }
             }
         }
-
-        /*public void Listen()
-        {
-            
-        }
-        public void ServerMain()
-        {
-            try
-            {
-                
-                /* clean up */
-        /*s.Close();
-        myList.Stop();
-    }
-    catch (Exception e)
-    {
-        Console.WriteLine("Error..... " + e.StackTrace);
-    }
-}*/
     }
 
     class Client
     {
         private TcpClient _Client { get; init; }
         private uint ServerPort { get; init; }
+        public string Nom { get; init; } = "invité";
         public Client(uint serverPort)
         {
             _Client = new TcpClient();
+            Console.WriteLine("Quel est votre nom?: ");
+            //string? nom = Console.ReadLine();
+            //if (nom != null) Nom = nom;
             ServerPort = serverPort;
             try
             {
@@ -93,7 +85,7 @@ namespace Classes
             }
         }
 
-        public void SendMessage(string msg = "allo")
+        public void SendMessage()
         {
             try
             {
@@ -115,15 +107,5 @@ namespace Classes
                 Console.WriteLine("Error..... " + e.StackTrace);
             }
         }
-        /*public static void ClientMain()
-        {
-            try
-            {
-                
-               
-                tcpclnt.Close();
-            }
-            
-        }*/
     }
 }
