@@ -26,9 +26,8 @@ namespace Chess
 
         public static Move Pawn(Pieces p)
         {
-            int ind = 0;
             List<int> possibilities = new();
-            if (p.player == 0) { ind = 1; } else { ind = -1; }
+            int ind = p.player == 0 ? 1 : -1;
             if (p.firstMove && Chess.CaseVide(p.pos + (Chess.board.squaresPerColumn) * 2 * ind) && Chess.CaseVide(p.pos + (Chess.board.squaresPerColumn) * ind))
             {
                 possibilities.Add(p.pos + (Chess.board.squaresPerColumn) * 2 * ind);
@@ -40,12 +39,22 @@ namespace Chess
             }
             for (int i = 0; i < Chess._Pieces.Count; i++)
             {
-                if (p.pos + 7 * ind == Chess._Pieces[i].pos)
+                
+                
+                if (p.pos + 7 * ind == Chess._Pieces[i].pos && Chess.board.GetColonne(p.pos) > 1)
                 {
+                    if (Program.KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
+                    {
+                        Console.WriteLine("   " + Chess.board.GetColonne(p.pos));
+                    }
                     possibilities.Add(p.pos + 7 * ind);
                 }
-                else if (p.pos + 9 * ind == Chess._Pieces[i].pos)
+                else if (p.pos + 9 * ind == Chess._Pieces[i].pos && Chess.board.GetColonne(p.pos) < 6)
                 {
+                    if (Program.KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
+                    {
+                        Console.WriteLine("   " + Chess.board.GetColonne(p.pos));
+                    }
                     possibilities.Add(p.pos + 9 * ind);
                 }
             }

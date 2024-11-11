@@ -399,7 +399,7 @@ namespace Main
         /// Renders to the window.
         /// </summary> 
 
-        static Server serv = new Server(8001);
+        /*static Server serv = new Server(8001);
         static Client client = new Client(8001);
 
         public static void ChatRoom()
@@ -417,13 +417,13 @@ namespace Main
                     client.SendMessage();
                 }
             }
-        }
+        }*/
 
         public static Menu Menu = new Menu("Écran principal", new()
         {
              new MenuItemBox(Games.Chess.ToString(), ChessMain, new Rect(100, 100, 100, 100)),
              new MenuItemBox(Games.Ludo.ToString(), LudoMain, new Rect(300, 100, 100, 100)),
-             new MenuItemBox(Games.ChatRoom.ToString(), ChatRoom, new Rect(100, 300, 150, 100))
+             //new MenuItemBox(Games.ChatRoom.ToString(), ChatRoom, new Rect(100, 300, 150, 100))
         });
 
 
