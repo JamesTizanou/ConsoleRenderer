@@ -131,6 +131,11 @@ namespace Ludo
             Player.Actual().pionJoue = false;
             De.obtenu = false;
 
+            if (Program.KeyHeld(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_SPACE) && Program.MouseLeftHeld())
+            {
+                Console.Write("allo");
+            }
+
             if (Player.rouge.IsPlaying)
             {
                 Player.rouge.IsPlaying = false;
@@ -224,14 +229,16 @@ namespace Ludo
                 {
                     BougerUnPion();
                 }
+                else if (Player.Actual().pionsEnMaison == 4 && De.val != 6)
+                {
+                    // BUG: Il y a un double switchturns. On rentre dans bougerUnPion, puis on rentre ici. Faire qqch pour éviter ça
+                    SwitchTurns();
+                }
                 if (De.val == 6 && Player.Actual().pionsEnMaison > 0)
                 {
                     SortirDeMaison();
                 }
-                if (Player.Actual().pionsEnMaison == 4 && De.val != 6)
-                {
-                    SwitchTurns();
-                }
+                
             }
         }
     }
