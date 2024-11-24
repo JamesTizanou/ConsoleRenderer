@@ -41,7 +41,7 @@ namespace Chess
             {
                 
                 
-                if (p.pos + 7 * ind == Chess._Pieces[i].pos && Chess.board.GetColonne(p.pos) > 1)
+                if (p.pos + 7 * ind == Chess._Pieces[i].pos && Chess.board.GetRangee(p.pos) >= 1)
                 {
                     if (Program.KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
                     {
@@ -49,7 +49,7 @@ namespace Chess
                     }
                     possibilities.Add(p.pos + 7 * ind);
                 }
-                else if (p.pos + 9 * ind == Chess._Pieces[i].pos && Chess.board.GetColonne(p.pos) < 6)
+                else if (p.pos + 9 * ind == Chess._Pieces[i].pos && Chess.board.GetRangee(p.pos) <= 6)
                 {
                     if (Program.KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
                     {
