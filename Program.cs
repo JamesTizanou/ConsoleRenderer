@@ -426,6 +426,26 @@ namespace Main
              //new MenuItemBox(Games.ChatRoom.ToString(), ChatRoom, new Rect(100, 300, 150, 100))
         });
 
+        public static Vector2D<float> vec = new(1, 1);
+
+        public static void SetZoom(float zoom)
+        {
+            if (KeyHeld(SDL_Scancode.SDL_SCANCODE_UP))
+            {
+                vec.x += zoom;
+                vec.y += zoom;
+            }
+            if (KeyHeld(SDL_Scancode.SDL_SCANCODE_DOWN))
+            {
+                vec.x -= zoom;
+                vec.y -= zoom;
+            }
+            if (KeyHeld(SDL_Scancode.SDL_SCANCODE_LEFT) || KeyHeld(SDL_Scancode.SDL_SCANCODE_RIGHT))
+            {
+                vec = new Vector2D<float>(1, 1);
+            }
+        }
+
 
         static void Render()
         {
@@ -450,6 +470,10 @@ namespace Main
             }
 
             UpdateKeyInfo();
+            SetZoom(0.03f);
+            SDL_RenderGetScale(renderer, out float x, out float y);
+            Console.WriteLine(x.ToString() + " : " + y.ToString());
+            SDL_RenderSetScale(renderer, vec.x, vec.y);
 
             // Switches out the currently presented render surface with the one we just did work on.
             SDL_RenderPresent(renderer);

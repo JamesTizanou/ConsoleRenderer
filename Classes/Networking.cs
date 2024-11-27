@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Classes
 {
+    // Little help: https://www.codeproject.com/Articles/429144/Simple-Instant-Messenger-with-SSL-Encryption-in-Cs
     class Server
     {
         public uint Port { get; init; }
