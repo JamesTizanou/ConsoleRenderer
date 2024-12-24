@@ -39,9 +39,8 @@ namespace Chess
             }
             for (int i = 0; i < Chess._Pieces.Count; i++)
             {
-                
-                
-                if (p.pos + 7 * ind == Chess._Pieces[i].pos && Chess.board.GetRangee(p.pos) >= 1)
+                // Ne marche pas. Dépendamment de la valeur de mon index, le getColle change
+                if (p.pos + 7 * ind == Chess._Pieces[i].pos && Chess.board.GetColonne(p.pos) >= 1 && Chess.board.GetColonne(p.pos) < 7)
                 {
                     if (Program.KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
                     {
@@ -49,7 +48,7 @@ namespace Chess
                     }
                     possibilities.Add(p.pos + 7 * ind);
                 }
-                else if (p.pos + 9 * ind == Chess._Pieces[i].pos && Chess.board.GetRangee(p.pos) <= 6)
+                else if (p.pos + 9 * ind == Chess._Pieces[i].pos && Chess.board.GetColonne(p.pos) >= 1 && Chess.board.GetColonne(p.pos) < 7)
                 {
                     if (Program.KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
                     {
