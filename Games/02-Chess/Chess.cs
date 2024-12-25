@@ -140,7 +140,7 @@ namespace Chess
             if (lastClicked != null)
             {
                 lastMoves = lastClicked.GetMoves();
-                lastMoves.ShowMoves();
+                lastMoves.Show();
             }
             return;
         }
@@ -211,18 +211,11 @@ namespace Chess
             }
             else
             {
-                string txt = "";
-                if (tour == 0)
-                {
-                    txt = "Noirs";
-                }
-                else
-                {
-                    txt = "Blancs";
-                }
+                string txt = tour == 0 ? "Noirs" : "Blancs";
                 Pencil(Colors.White);
                 DrawText("Les " + txt + " ont gagné", new(200, 200));
             }
+            Program.BackToHub();
         }
 
         public static void ChangeTurn()

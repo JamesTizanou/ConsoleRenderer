@@ -22,6 +22,8 @@ namespace Ludo
                                                 171,156,141,125,124,123,122,121,120,105,90,91,92,93,94,95,81,66,51,36,21 };
         static bool FirstExec = true;
 
+        public static Colors? Winner = null;
+
 
         public static void LudoMain()
         {
@@ -30,11 +32,29 @@ namespace Ludo
                 Player.rouge.IsPlaying = true;
                 FirstExec = false;
             }
-            DisplayBoard();
-            ObtenirDe();
-            JouerSonTour();
-            DisplayTokens();
-            Console.WriteLine(De.val);
+            if (Winner == null)
+            {
+                DisplayBoard();
+                ObtenirDe();
+                JouerSonTour();
+                DisplayTokens();
+                if (Program.KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_D))
+                {
+                    new Thread(() =>
+                    {
+                        while (true)
+                        {
+                            Debugger.Show();
+                        }
+                    }).Start();
+                }
+            }
+            else
+            {
+                Color.Pencil(Colors.White);
+                Program.DrawText($"{Winner} won!", new(100,100));
+            }
+            Program.BackToHub();
         }
 
         static void ObtenirDe()
@@ -131,7 +151,7 @@ namespace Ludo
             Player.Actual().pionJoue = false;
             De.obtenu = false;
 
-            if (Program.KeyHeld(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_SPACE) && Program.MouseLeftHeld())
+            /*if (Program.KeyHeld(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_SPACE) && Program.MouseLeftHeld())
             {
                 Console.Write("allo");
             }
@@ -155,7 +175,7 @@ namespace Ludo
             {
                 Player.jaune.IsPlaying = false;
                 Player.rouge.IsPlaying = true;
-            }
+            }*/
 
             /*//Player a = new Player(Player.Actual());
             Player.Next().IsPlaying = true;
@@ -231,7 +251,6 @@ namespace Ludo
                 }
                 else if (Player.Actual().pionsEnMaison == 4 && De.val != 6)
                 {
-                    // BUG: Il y a un double switchturns. On rentre dans bougerUnPion, puis on rentre ici. Faire qqch pour éviter ça
                     SwitchTurns();
                 }
                 if (De.val == 6 && Player.Actual().pionsEnMaison > 0)

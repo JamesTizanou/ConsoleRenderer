@@ -39,22 +39,27 @@ namespace Chess
             }
             for (int i = 0; i < Chess._Pieces.Count; i++)
             {
-                // Ne marche pas. Dépendamment de la valeur de mon index, le getColle change
-                if (p.pos + 7 * ind == Chess._Pieces[i].pos && Chess.board.GetColonne(p.pos) >= 1 && Chess.board.GetColonne(p.pos) < 7)
+                if (p.pos + 7 * ind == Chess._Pieces[i].pos)
                 {
-                    if (Program.KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
+                    if (ind > 0 && Chess.board.GetColonne(p.pos) > 0)
                     {
-                        Console.WriteLine("   " + Chess.board.GetColonne(p.pos));
+                        possibilities.Add(p.pos + 7 * ind);
                     }
-                    possibilities.Add(p.pos + 7 * ind);
+                    else if (ind < 0 && Chess.board.GetColonne(p.pos) < 7)
+                    {
+                        possibilities.Add(p.pos + 7 * ind);
+                    }
                 }
-                else if (p.pos + 9 * ind == Chess._Pieces[i].pos && Chess.board.GetColonne(p.pos) >= 1 && Chess.board.GetColonne(p.pos) < 7)
+                else if (p.pos + 9 * ind == Chess._Pieces[i].pos)
                 {
-                    if (Program.KeyPressed(SDL2.SDL.SDL_Scancode.SDL_SCANCODE_A))
+                    if (ind > 0 && Chess.board.GetColonne(p.pos) < 7)
                     {
-                        Console.WriteLine("   " + Chess.board.GetColonne(p.pos));
+                        possibilities.Add(p.pos + 9 * ind);
                     }
-                    possibilities.Add(p.pos + 9 * ind);
+                    else if (ind < 0 && Chess.board.GetColonne(p.pos) > 0)
+                    {
+                        possibilities.Add(p.pos + 9 * ind);
+                    }
                 }
             }
             possibilities = FiltrerMoves(p, possibilities);
@@ -313,7 +318,7 @@ namespace Chess
             this.casesPossibles = casesPossibles;
         }
 
-        public void ShowMoves()
+        public void Show()
         {
 
             for (int i = 0; i < casesPossibles.Count; i++)

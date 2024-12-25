@@ -65,7 +65,7 @@ namespace Main
             SDL_GetMouseState(out x, out y);
             mpos.x = x;
             mpos.y = y;
-            Console.WriteLine("Cordonnées: " + mpos.x + "," + mpos.y);
+            //Console.WriteLine("Cordonnées: " + mpos.x + "," + mpos.y);
             return mpos;
         }
 
@@ -419,6 +419,18 @@ namespace Main
             }
         }*/
 
+        public static void BackToHub()
+        {
+            Color.Pencil(Colors.White);
+            Rect home = new(new(320, 740), new(150, 35));
+            Program.DrawText("Back to Hub", new(330, 745));
+            Program.DrawRect(home);
+            if (Program.MouseLeftPressed() && Program.PointInRect(Program.MousePosition(), home))
+            {
+                Program.RunningGame = Games.None;
+            }
+        }
+
         public static Menu Menu = new Menu("Écran principal", new()
         {
              new MenuItemBox(Games.Chess.ToString(), ChessMain, new Rect(100, 100, 100, 100)),
@@ -472,7 +484,7 @@ namespace Main
             UpdateKeyInfo();
             SetZoom(0.03f);
             SDL_RenderGetScale(renderer, out float x, out float y);
-            Console.WriteLine(x.ToString() + " : " + y.ToString());
+            //Console.WriteLine(x.ToString() + " : " + y.ToString());
             SDL_RenderSetScale(renderer, vec.x, vec.y);
 
             // Switches out the currently presented render surface with the one we just did work on.

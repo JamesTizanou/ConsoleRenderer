@@ -64,12 +64,24 @@ namespace Ludo
             Color.Pencil(col);
         }
 
+        public unsafe bool isFinishing()
+        {
+            List<int> finishTiles = joueur->chemin_p.GetRange(joueur->chemin_p.Count - 6, 6);
+            return finishTiles.Contains(caseActuelle);
+        }
+
         public unsafe void Move()
         {
             if (outOfHome)
             {
-                caseActuelle += De.val;
-                //pos = Ludo.board.grille[joueur->chemin_p[caseActuelle]].pos;
+                if (caseActuelle + De.val < joueur->chemin_p.Last())
+                {
+                    caseActuelle += De.val;
+                }
+                else if (caseActuelle + De.val == joueur->chemin_p.Last())
+                {
+                    Ludo.Winner = joueur->couleur;
+                }
             }
         }
     }
